@@ -1,0 +1,169 @@
+/* Cost Calculator Admin Styles */
+
+#fields-builder {
+	background: #fff;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	padding: 20px;
+	margin-bottom: 20px;
+}
+
+#fields-list {
+	margin-bottom: 20px;
+}
+
+.field-item {
+	background: #f9f9f9;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	padding: 15px;
+	margin-bottom: 10px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.field-item-info {
+	flex: 1;
+}
+
+.field-item-type {
+	display: inline-block;
+	background: #0073aa;
+	color: white;
+	padding: 3px 8px;
+	border-radius: 3px;
+	font-size: 11px;
+	margin-right: 8px;
+}
+
+.field-item-label {
+	font-weight: 600;
+	color: #333;
+	margin: 5px 0;
+}
+
+.field-item-key {
+	color: #999;
+	font-size: 12px;
+	font-family: monospace;
+}
+
+.field-item-actions {
+	display: flex;
+	gap: 5px;
+}
+
+.field-item-actions button {
+	padding: 5px 10px;
+	font-size: 12px;
+}
+
+/* Field Modal */
+#field-modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.7);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 10000;
+}
+
+.field-modal-content {
+	background: white;
+	border-radius: 4px;
+	padding: 30px;
+	max-width: 500px;
+	width: 90%;
+	max-height: 90vh;
+	overflow-y: auto;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.field-modal-content h3 {
+	margin-top: 0;
+	margin-bottom: 20px;
+}
+
+#field-form p {
+	margin-bottom: 15px;
+}
+
+#field-form label {
+	display: block;
+	margin-bottom: 5px;
+	font-weight: 600;
+	color: #333;
+}
+
+#field-form input[type="text"],
+#field-form input[type="number"],
+#field-form select,
+#field-form textarea {
+	width: 100%;
+	padding: 8px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-family: inherit;
+	box-sizing: border-box;
+}
+
+#field-form textarea {
+	resize: vertical;
+	font-family: monospace;
+}
+
+#field-form small {
+	display: block;
+	color: #999;
+	margin-top: 5px;
+	font-size: 12px;
+}
+
+.formula-key-hints {
+	margin-top: 8px;
+	padding: 8px 10px;
+	background: #f6f8fa;
+	border: 1px solid #d0d7de;
+	border-radius: 4px;
+}
+
+.formula-key-hints small {
+	margin: 0;
+	color: #1f2328;
+	line-height: 1.4;
+}
+
+#options-list {
+	margin-bottom: 10px;
+}
+
+.option-item {
+	display: flex;
+	gap: 5px;
+	margin-bottom: 8px;
+}
+
+.option-item input {
+	flex: 1;
+}
+
+.option-item button {
+	padding: 5px 10px;
+}
+
+/* Shortcode display */
+.shortcode-info {
+	background: #f0f6fc;
+	border: 1px solid #0073aa;
+	border-radius: 4px;
+	padding: 10px;
+	margin: 10px 0;
+	font-family: monospace;
+	color: #0073aa;
+	word-break: break-all;
+}

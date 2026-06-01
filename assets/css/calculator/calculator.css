@@ -1,0 +1,233 @@
+/* Cost Calculator Frontend Styles */
+
+.cost-calculator-wrapper {
+	--cc-bg: #ffffff;
+	--cc-surface: #f7f8fa;
+	--cc-border: #dfe3e8;
+	--cc-text: #111827;
+	--cc-muted: #6b7280;
+	--cc-accent: #1f6feb;
+	max-width: 1080px;
+	margin: 0 auto;
+	padding: 8px;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	color: var(--cc-text);
+}
+.cost-calculator-form {
+	display: flex;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 15px;
+    margin-top: 16px;
+}
+@media (max-width: 768px) {
+	.cost-calculator-form {
+		grid-template-columns: 1fr;
+		gap: 16px;
+	}
+}
+/* Fields */
+.cost-calculator-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #0B0B0B;
+    border: 1px solid #FFFFFF26;
+    border-radius: 6px;
+    padding: 20px;
+    box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04);
+	width: 50%;
+}
+.cost-calculator-field {
+	display: flex;
+	flex-direction: column;
+}
+.cost-calculator-field label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #fff;
+    font-size: 14px;
+}
+.cost-calculator-field small {
+	color: #fff;
+	font-size: 12px;
+	margin-top: 4px;
+}
+.field-input, .field-input input, .field-input select, .field-input textarea {
+    padding: 8px 12px;
+    border: 1px solid #FFFFFF26;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    background: #0B0B0B;
+    color: #fff;
+}
+.field-input:focus,
+.field-input input:focus,
+.field-input select:focus,
+.field-input textarea:focus {
+	outline: none;
+	border-color: var(--cc-accent);
+	box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.16);
+}
+/* Radio and Checkbox Groups */
+.radio-group,
+.checkbox-group {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+.radio-label,
+.checkbox-label {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	font-weight: normal;
+	margin: 0;
+}
+.radio-label input,
+.checkbox-label input {
+	margin-right: 8px;
+	cursor: pointer;
+}
+/* Quantity Wrapper */
+.quantity-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+}
+.qty-btn {
+	padding: 8px 12px;
+	border: 1px solid var(--cc-border);
+	background: var(--cc-surface);
+	cursor: pointer;
+	border-radius: 10px;
+	font-size: 16px;
+	transition: all 0.2s ease;
+}
+.qty-btn:hover {
+	background: #eef2f7;
+	border-color: #c6cdd6;
+}
+.qty-input {
+	flex: 1;
+	text-align: center;
+	max-width: 80px;
+}
+/* Slider */
+.slider {
+	width: 100%;
+	cursor: pointer;
+}
+.slider-value {
+	display: block;
+	margin-top: 8px;
+	font-weight: 600;
+	color: var(--cc-accent);
+}
+/* Toggle Switch */
+.toggle-label {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	gap: 10px;
+	margin: 0;
+}
+.toggle-input {
+	display: none;
+}
+.toggle-switch {
+	width: 50px;
+	height: 24px;
+	background: #c8ced8;
+	border-radius: 12px;
+	position: relative;
+	transition: background 0.3s ease;
+}
+.toggle-switch::after {
+	content: '';
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	background: white;
+	border-radius: 50%;
+	top: 2px;
+	left: 2px;
+	transition: left 0.3s ease;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.toggle-input:checked + .toggle-switch {
+	background: var(--cc-accent);
+}
+.toggle-input:checked + .toggle-switch::after {
+	left: 28px;
+}
+/* Summary Panel */
+.cost-calculator-summary {
+    background: #0B0B0B;
+    border: 1px solid #FFFFFF26;
+    border-radius: 6px;
+    padding: 20px;
+    position: sticky;
+    top: 20px;
+    /* max-height: 460px; */
+	height: 100%;;
+    overflow-y: auto;
+    box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04);
+	width: 50%;
+}
+.cost-calculator-summary h3 {
+	margin-top: 0;
+	margin-bottom: 16px;
+	color: #fff;
+	font-size: 18px;
+}
+.summary-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 14px;
+}
+.summary-table tr {
+	border-bottom: none;
+	padding: 10px 0;
+}
+.summary-table td {
+	padding: 10px 0;
+}
+.summary-table td:first-child {
+	color: #fff;
+}
+.summary-table td:last-child {
+	text-align: right;
+	font-weight: 600;
+	color: #fff;
+}
+.total-value {
+	font-size: 20px;
+	/* color: var(--cc-accent) !important; */
+	font-weight: bold;
+}
+/* Divider */
+.field-divider {
+	border: none;
+	border-top: 1px solid var(--cc-border);
+	margin: 10px 0;
+}
+/* HTML Content */
+.field-html {
+	background: transparent;
+	border: none;
+	margin: 10px 0;
+}
+/* Responsive */
+@media (max-width: 480px) {
+	.cost-calculator-summary {
+		position: static;
+		max-height: none;
+	}
+	.field-input,
+	.field-input input,
+	.field-input select {
+		font-size: 16px; /* Prevents zoom on iOS */
+	}
+}

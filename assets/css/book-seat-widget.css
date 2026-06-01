@@ -1,0 +1,394 @@
+.urbantaxi-book-wrapper {
+    position: relative;
+}
+.urbantaxi-book-btn {
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.urbantaxi-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: unset;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+.urbantaxi-modal.active {
+    min-height: 1000px;
+    display: flex;
+    height: 100%;
+    width: 100vw;
+}
+.theme-urbantaxi .taxi-booking-form-box {
+    background-color: #111317;
+    border: 1px solid #FDC702;
+    border-radius: 6px;
+}
+.theme-urbantaxi .mptbm_transport_search_area .tabListsNext,.theme-urbantaxi div.mptbm_transport_search_area div.tabsContentNext{
+    background: transparent;
+    border-radius: 0px;
+    padding: 0px;
+}
+.theme-urbantaxi div.mptbm_transport_search_area {
+    width: 100%;
+    max-width: unset;
+    box-shadow: unset;
+    border-radius: 6px;
+    background: var(--urbantaxi-tertiary-theme-color);
+    border: 1px solid #FDC702;
+}
+.elementor-20 .elementor-element.elementor-element-e53551b .urbantaxi-modal-content {
+    position: absolute;
+}
+.position-center {
+    align-self: center;
+}
+.urbantaxi-modal-content {
+    width: 100%;
+    max-width: 65%;
+    border-radius: 20px;
+    position: absolute !important;
+    margin: auto;
+    background: linear-gradient(135deg, rgb(200 200 200 / 0%), rgb(200 200 200 / 0%));
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    z-index: 99;
+}
+.mpTabsNext .tabItemNext.active [class*="circleIcon"]::after {
+    border-color: #fff !important;
+}
+.position-top {
+    align-self: flex-start;
+    margin-top: 100px;
+}
+
+.position-bottom {
+    align-self: flex-end;
+    margin-bottom: 100px;
+}
+.position-center {
+    align-self: center;
+}
+.theme-urbantaxi .urbantaxi-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #fff;
+    background: transparent;
+    box-shadow: none;
+    border: none;
+}
+.theme-urbantaxi .mpForm:first-child {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0px 10px;
+}
+.urbantaxi-modal-content.transparent {
+    background: transparent !important;
+}
+.theme-urbantaxi .mptbm_map_area, .theme-urbantaxi .mptbm_transport_search_area .mptbm_map_area, #taxi-slider-main-sectioni.fas.fa-map-marker-alt.mptbm_left_icon.allCenter{
+    display: none !important;
+}
+div.mptbm_transport_search_area .mptbm_search_area.inputHorizontal {
+    width: 100%;
+    max-width: 100% !important;
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+.theme-urbantaxi .mpForm:last-child {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    position: unset;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.theme-urbantaxi .mpForm:last-child .inputList.justifyBetween._fdColumn {
+    width: 100%;
+    grid-row-start: 2;
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+.mpForm:last-child .inputList {
+    /* width: 49%; */
+}
+.theme-urbantaxi .tabListsNext {
+    display: none !important;
+}
+.inputList.justifyBetween._fdColumn {
+    margin-top: unset !important;
+}
+#mptbm_get_vehicle {
+	display: inline-block;
+	border-radius: 6px;
+	position: relative;
+	padding: 12px 25px;
+	z-index: 1;
+	color: var;
+	font: 500 14px / 14px Roboto;
+	background: #FDC702;
+	border: none;
+	text-transform: uppercase;
+}
+#mptbm_get_vehicle:hover{
+    background-color: #ffffff !important;
+    color: #000000;
+}
+.theme-urbantaxi div.mptbm_transport_search_area .mptbm_search_area label .formControl {
+	height: 42px;
+    background-color: #1B1B1B;
+    color: #fff;
+    font-weight: 400;
+    border: 0.5px solid #FFFFFF4D;
+    background-image: none;
+    background-repeat: no-repeat;
+    background-position: calc(100% - var(--dmp_xs));
+    background-size: auto;
+    -webkit-appearance: none;
+    width: 100%;
+    border-radius: 6px;
+    padding: 10px 40px 10px 20px !important;
+}
+.theme-urbantaxi div.mptbm_transport_search_area .mptbm_left_icon {
+    position: absolute;
+    right: 10px;
+    left: unset;
+    bottom: 0px;
+    width: 14px !important;
+    font-size: 16px;
+    color: #fff;
+    background-color: transparent;
+    border-radius: var(--dbr) 0 0 var(--dbr);
+    height: 42px;
+    margin: 0 !important;
+}
+.theme-urbantaxi .mpStyle .mpForm .fdColumn > span {
+	margin: 0 0 5px 0;
+    font: 400 14px / 14px Lexend;
+}
+.mpStyle [class*="_themeButton"] span{
+    color: #222121 !important;
+}
+.theme-urbantaxi .mpStyle .mpForm label .far,.theme-urbantaxi .mpStyle .mpForm label .fas{
+    font-family: 'Font Awesome 5 Free' !important;
+}
+.theme-urbantaxi .mpForm input.formControl { color: #333; }
+div.mptbm_transport_search_area .tabItemNext .circleTitle {
+    font-size: 15px !important;
+    color: #fff !important;
+    font-family: Lexend;
+    font-weight: 700 !important;
+}
+.theme-urbantaxi div.mptbm_transport_search_area .tabItemNext.active [class*="circleIcon"],.theme-urbantaxi .mptbm-info-button {
+    background: #FDC702 !important;
+}
+.mptbm-info-button {
+    border-radius: 50px !important;
+}
+.mptbm-info-button i {
+    color: #000 !important;
+}
+.theme-urbantaxi .mptbm_transport_search_area .mpTabsNext .tabItemNext [class*="circleIcon"] {
+    border: 1px solid #FDC702;
+    color: #222121;
+}
+.theme-urbantaxi .mptbm_transport_search_area .mpTabsNext .tabItemNext [class*="circleIcon"] .mp_zero{
+    font-size: 18px;
+    font-weight: 400;
+    font-family: Lexend;
+}
+.theme-urbantaxi .mpTabsNext .tabItemNext.active [class*="circleIcon"]::after {
+    border-width: 2px;
+}
+.theme-urbantaxi div.mptbm_transport_search_area .tabItemNext [class*="circleIcon"]::after {
+    border-color: #fff !important;
+}
+.theme-urbantaxi .mpStyle button:hover,.theme-urbantaxi .mpStyle button:focus,.theme-urbantaxi .mpStyle button:hover,.theme-urbantaxi .mpStyle button:focus,.theme-urbantaxi .mpStyle .themeButton,.theme-urbantaxi .mpStyle [class*="_themeButton"]{
+    background-color: #FDC702;
+    color: #222121;
+}
+.theme-urbantaxi div.mptbm_transport_search_area button.mptbm_transport_select{
+    background-image: linear-gradient(to right,#FDC702, #FDC702);
+    border-radius: 6px;
+}
+.theme-urbantaxi .mpStyle button:hover span{
+    color: #222121 !important;
+}
+.theme-urbantaxi div.mptbm_transport_search_area button.mptbm_transport_select,.theme-urbantaxi div.mptbm_transport_search_area .leftSidebar h6{
+    color: #222121 !important;
+    font-family: 'Roboto' !important;
+}
+.theme-urbantaxi div.mptbm_transport_search_area .leftSidebar p{
+    font-family: 'Roboto' !important;
+}
+.theme-urbantaxi .urbantaxi-modal-content select option,.theme-urbantaxi .urbantaxi-modal-content  ul.mp_input_select_list li,.theme-urbantaxi  #ui-datepicker-div .ui-state-active,.theme-urbantaxi  #ui-datepicker-div .ui-datepicker-header{
+    background-color: #222121;
+    color: #fff !important;
+}
+.theme-urbantaxi #ui-datepicker-div .ui-state-default,.theme-urbantaxi div.mpStyle .textTheme, div.mpStyle [class*="_textTheme"],.theme-urbantaxi div.mpStyle strong,.theme-urbantaxi .mpStyle .addonGroupContent{
+    color: #000;
+    position: relative;
+    top: 0px;
+}
+.theme-urbantaxi div.mpStyle .mp_load_more_text_area,.theme-urbantaxi div.mpStyle [class*="_fs_h4"],div.mpStyle h3,.mptbm_extra_service .mptbm_extra_service_item h4,.mptbm_extra_service .woocommerce-Price-amount {
+    color: #fff !important;
+}
+div.mpStyle h4{
+    color: #000;
+}
+.theme-urbantaxi #ui-datepicker-div.ui-datepicker td,.theme-urbantaxi #ui-datepicker-div .ui-datepicker-header,.theme-urbantaxi .mpStyle .themeButton, .theme-urbantaxi .mpStyle [class*="_themeButton"]{
+    border: 1px solid #FDC702;
+}
+.theme-urbantaxi #mptbm_get_vehicle svg path{
+    fill: #FDC702;
+}
+.theme-urbantaxi .mpStyle ul.mp_input_select_list li{
+    color: #fff;
+}
+.theme-urbantaxi .mpStyle button:hover, .theme-urbantaxi .mpStyle button:focus{
+    opacity: 1;
+}
+.theme-urbantaxi div.mptbm_transport_search_area ul.list_inline_two li span {
+    font-size: 16px;
+    font-family: 'Roboto';
+}
+.theme-urbantaxi #mptbm_get_vehicle svg,.theme-urbantaxi #mptbm_get_vehicle span{
+    display: none;
+}
+.theme-urbantaxi .svg-inline--fa.fa-info,.theme-urbantaxi .mptbm-info-button svg path,.mptbm-extra-info-content svg path{
+    color: #222121;
+    fill: #222121;
+}
+.theme-urbantaxi div.mptbm_transport_search_area .leftSidebar h3{
+    color: #222121;
+    font-family: 'Lexend' !important;
+}
+.theme-urbantaxi .mpStyle .mpBtn.mActive, .theme-urbantaxi .mpStyle [class*="_mpBtn"].mActive, .theme-urbantaxi .mpStyle .mpBtn.mpActive:hover, .theme-urbantaxi .mpStyle [class*="_mpBtn"].mpActive:hover{
+    background-color: #FDC702 !important;
+}
+.theme-urbantaxi .mpStyle .addonGroupContent path{
+    fill: #222121;
+}
+.theme-urbantaxi .mptbm-extra-info-content {
+    border-top: 3px solid #222121 !important;
+}
+.theme-urbantaxi #mptbm_start_date::placeholder {
+    color: #000 !important;
+    opacity: 1 !important;
+}
+.theme-urbantaxi #mptbm_start_date::-webkit-input-placeholder {
+    color: #000 !important;
+}
+.theme-urbantaxi #mptbm_start_date:-ms-input-placeholder {
+    color: #000 !important;
+}
+.theme-urbantaxi #mptbm_start_date::-ms-input-placeholder {
+    color: #000 !important;
+}
+.theme-urbantaxi .inputList input.formControl {
+    color: #fff !important;
+    -webkit-text-fill-color: #fff !important;
+    opacity: 1 !important;
+    font-size: 13px !important;
+}
+/* Placeholder color */
+.theme-urbantaxi .inputList input.formControl::placeholder {
+    color: rgba(255,255,255,0.7) !important;
+    opacity: 1 !important;
+}
+/* Chrome */
+.theme-urbantaxi .inputList input.formControl::-webkit-input-placeholder {
+    color: rgba(255,255,255,0.7) !important;
+}
+/* Edge */
+.theme-urbantaxi .inputList input.formControl:-ms-input-placeholder {
+    color: rgba(255,255,255,0.7) !important;
+}
+.wc-block-checkout__actions_row .wc-block-components-button .wc-block-components-button__text {
+  margin: 0;
+}
+.wc-block-checkout__actions_row .wc-block-components-button {
+  border: none;
+  background: transparent;
+  padding: 0 !important;
+}
+.is-medium table.wc-block-cart-items .wc-block-cart-items__row{
+  padding: 16px 20px !important;
+}
+.wc-block-components-main form{
+  box-shadow: 0px 0px 3px 0px #000;
+  border-radius: 10px;
+  padding: 30px;
+}
+.wc-block-cart .wc-block-cart__submit-container--sticky:before {
+  box-shadow: 0 1px 6px 0px currentColor !important;
+}
+.wc-block-checkout__actions_row{
+  width: fit-content;
+  margin: auto;
+}
+.is-large .wp-block-woocommerce-checkout-order-summary-block {
+  box-shadow: 0px 0px 3px 0px #000 !important;
+  border-radius: 10px !important;
+  padding: 30px;
+  position: relative;
+  top: -8px;
+}
+.wp-block-woocommerce-checkout-order-summary-block{
+  box-shadow: 0px 0px 3px 0px #000 !important;
+  border-radius: 10px !important;
+}
+.wc-block-components-checkbox__label,.wc-block-components-form .wc-block-components-checkout-step{
+  color: #000;
+}
+.wc-block-components-checkout-return-to-cart-button{
+  color: #fff !important;
+  font: 500 14px / 20px Lexend;
+  background: #222121;
+  border-radius: 5px;
+  padding: 10px 10px 10px 30px;
+  margin: auto;
+  text-align: center;
+  margin-right: 10px;
+}
+.wc-block-components-button__text {
+  background: #222121;
+  color: #fff;
+  padding: 9px 30px;
+  border-radius: 6px;
+  font: 500 14px / 20px Lexend;
+  margin-top: 0px;
+  opacity: 1 !important;
+}
+.wc-block-components-checkout-return-to-cart-button:hover,.wc-block-components-button__text:hover{
+    background: #fff;
+    color: #000 !important;
+}
+.wc-block-components-order-summary .wc-block-components-order-summary-item__image>img {
+    max-width: 48px;
+    width: 48px;
+    object-fit: contain;
+}
+.theme-urbantaxi .mpStyle .dLayout, .theme-urbantaxi .mpStyle [class*="_dLayout"]{
+	background-color: transparent;
+	border: none;
+}
+.theme-urbantaxi .mpStyle .inputInline .mpForm:last-child{
+	position: relative;
+    left: 0;
+    top: 10px;
+}
+.theme-urbantaxi #hourly .mpForm:last-child,.theme-urbantaxi #distance .mpForm:last-child {
+	bottom: 65px;
+}
+.theme-urbantaxi .mptb-tabs .current{
+	color: #000;
+}

@@ -1,0 +1,513 @@
+/* ============================================================
+   Testimonial Slider Widget — Stacked Card Layout CSS
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+/* ---------- Root Variables ---------- */
+.tsw-testimonial-section {
+    --tsw-gold: #f5c518;
+    --tsw-gold-dim: rgba(245, 197, 24, 0.12);
+    --tsw-dark: #0a0a0a;
+    --tsw-card-bg: #1c1c1c;
+    --tsw-card-active-bg: #242424;
+    --tsw-border: #2e2e2e;
+    --tsw-border-active: #f5c518;
+    --tsw-text: #c8c8c8;
+    --tsw-text-muted: #7a7a7a;
+    --tsw-white: #ffffff;
+    --tsw-radius: 18px;
+    --tsw-dur: 0.65s;
+    --tsw-ease: cubic-bezier(0.35, 0.0, 0.25, 1.0);
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ---------- Section ---------- */
+.tsw-testimonial-section {
+    overflow: hidden;
+    position: relative;
+}
+
+/* ---------- Header ---------- */
+.tsw-header {
+    text-align: center;
+    margin-bottom: 60px;
+    padding: 0 20px;
+}
+
+.tsw-badge-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tsw-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--tsw-gold);
+    color: #0a0a0a;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 7px 16px;
+    border-radius: 100px;
+    animation: tsw-badge-pulse 3s ease-in-out infinite;
+}
+
+@keyframes tsw-badge-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(245, 197, 24, 0.5); }
+    50%       { box-shadow: 0 0 0 8px rgba(245, 197, 24, 0); }
+}
+
+.tsw-heading {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(26px, 3.5vw, 44px);
+    font-weight: 700;
+    color: var(--tsw-white);
+    line-height: 1.2;
+    margin: 0 0 14px;
+}
+
+.tsw-highlight {
+    color: var(--tsw-gold);
+    font-style: italic;
+}
+
+.tsw-subheading {
+    font-size: 14px;
+    color: var(--tsw-text-muted);
+    font-weight: 400;
+    margin: 0 auto;
+    max-width: 500px;
+    line-height: 1.65;
+}
+
+/* ============================================================
+   STACKED SLIDER — Core
+   ============================================================ */
+
+.tsw-slider-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* max-width: 1400px; */
+    margin: 0 auto;
+    /* padding: 0 30px; */
+    min-height: 500px;
+}
+
+/* ---------- Navigation Buttons ---------- */
+.tsw-nav-btn {
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background-color: #1e1e1e;
+    border: 1px solid var(--tsw-border);
+    color: var(--tsw-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    position: relative;
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+    outline: none;
+    user-select: none;
+}
+
+.tsw-nav-btn:hover {
+    background-color: var(--tsw-gold);
+    color: #0a0a0a;
+    border-color: var(--tsw-gold);
+    transform: scale(1.08);
+}
+.tsw-nav-btn:active { transform: scale(0.94); }
+/* ======== ACCESSIBILITY COLOR START ======== */
+.tsw-nav-btn:focus {
+    outline: 3px solid var(--tsw-gold);
+    outline-offset: 2px;
+}
+/* ======== ACCESSIBILITY COLOR END ======== */
+.tsw-prev { margin-right: 24px; }
+.tsw-next { margin-left: 24px; }
+
+/* ---------- Stage: the perspective container ---------- */
+.tsw-stage {
+    flex: 1;
+    position: relative;
+    height: 480px;
+    /* perspective for 3D stack feel */
+    perspective: 1200px;
+    perspective-origin: 50% 50%;
+    overflow: visible;
+}
+
+/* ---------- Each card slot ---------- */
+.tsw-slide {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 430px;
+    /* transform-origin is centre so translateX/Y + scale work cleanly */
+    transform-origin: center center;
+    transition:
+        transform   var(--tsw-dur) var(--tsw-ease),
+        opacity     var(--tsw-dur) var(--tsw-ease);
+    will-change: transform, opacity;
+    cursor: pointer;
+}
+
+/* ======== ACCESSIBILITY COLOR START ======== */
+.tsw-slide:focus {
+    outline: none;
+}
+
+.tsw-slide:focus .tsw-card {
+    box-shadow:
+        0 0 0 3px var(--tsw-gold),
+        0 24px 70px rgba(0,0,0,0.55),
+        inset 0 0 60px rgba(245,197,24,0.04);
+}
+/* ======== ACCESSIBILITY COLOR END ======== */
+
+/* ---------- Card face ---------- */
+.tsw-card {
+    background-color: var(--tsw-card-bg);
+    border: 1.5px solid var(--tsw-border);
+    border-radius: var(--tsw-radius);
+    padding: 38px 34px 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+    min-height: 360px;
+    position: relative;
+    overflow: hidden;
+    transition:
+        background-color var(--tsw-dur) var(--tsw-ease),
+        border-color     var(--tsw-dur) var(--tsw-ease),
+        box-shadow       var(--tsw-dur) var(--tsw-ease);
+}
+
+/* Active card styling */
+.tsw-slide[data-pos="0"] .tsw-card {
+    background-color: var(--tsw-card-active-bg);
+    border-color: var(--tsw-gold);
+    box-shadow:
+        0 0 0 1px rgba(245,197,24,0.18),
+        0 24px 70px rgba(0,0,0,0.55),
+        inset 0 0 60px rgba(245,197,24,0.04);
+}
+
+/* Gold top accent line */
+.tsw-slide[data-pos="0"] .tsw-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 55%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--tsw-gold), transparent);
+    border-radius: 2px;
+}
+
+/* ============================================================
+   POSITION TRANSFORMS
+   pos=0  → active, centred, full size, on top
+   pos=-1 → left side, 1 step back
+   pos=-2 → left side, 2 steps back (further)
+   pos=+1 → right side, 1 step back
+   pos=+2 → right side, 2 steps back
+   pos=hidden → fully behind active, invisible
+   ============================================================ */
+
+/* Active */
+.tsw-slide[data-pos="0"] {
+    transform: translate(-50%, -50%) translateZ(0) scale(1);
+    opacity: 1;
+    z-index: 4;
+}
+
+/* Immediate left */
+.tsw-slide[data-pos="-1"] {
+    transform: translate(calc(-80% - 200px), calc(-58% + 30px)) scale(0.84);
+    opacity: 1;
+    z-index: 3;
+}
+
+/* Far left */
+.tsw-slide[data-pos="-2"] {
+    transform: translate(calc(-82% - 340px), calc(-63% + 55px)) scale(0.70);
+    opacity: 1;
+    z-index: 1;
+}
+
+/* Immediate right */
+.tsw-slide[data-pos="1"] {
+    transform: translate(calc(-16% + 200px), calc(-56% + 25px)) scale(0.84);
+    opacity: 1;
+    z-index: 3;
+}
+
+/* Far right */
+.tsw-slide[data-pos="2"] {
+    transform: translate(calc(-18% + 340px), calc(-62% + 50px)) scale(0.70);
+    opacity: 1;
+    z-index: 1;
+}
+
+/* Hidden (beyond visible range, sits behind active) */
+.tsw-slide[data-pos="hidden"] {
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* ---------- Avatar ---------- */
+.tsw-avatar-wrap {
+    position: relative;
+    width: 88px;
+    height: 88px;
+    flex-shrink: 0;
+}
+
+.tsw-avatar {
+    width: 88px;
+    height: 88px;
+    border-radius: 50% !important;
+    object-fit: cover;
+    display: block;
+    position: relative;
+    z-index: 1;
+    background: #333;
+}
+
+.tsw-avatar-ring {
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    transition: border-color 0.4s ease;
+}
+.tsw-nav-btn.tsw-prev{
+    left: 40px;
+}
+.tsw-nav-btn.tsw-next{
+    right: 40px;
+}
+.tsw-slide[data-pos="0"] .tsw-avatar-ring {
+    /* border-color: var(--tsw-gold);
+    background:
+        linear-gradient(var(--tsw-card-active-bg), var(--tsw-card-active-bg)) padding-box,
+        linear-gradient(135deg, var(--tsw-gold), transparent 55%, var(--tsw-gold)) border-box;
+    animation: tsw-ring-spin 5s linear infinite; */
+}
+
+@keyframes tsw-ring-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ---------- Stars ---------- */
+.tsw-stars {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+}
+
+.tsw-star.filled  { color: var(--tsw-gold); }
+.tsw-star.empty   { color: #3a3a3a; }
+
+/* Star pop-in on active */
+.tsw-slide[data-pos="0"] .tsw-star {
+    animation: tsw-star-pop 0.45s ease both;
+}
+.tsw-slide[data-pos="0"] .tsw-star:nth-child(1) { animation-delay: 0.04s; }
+.tsw-slide[data-pos="0"] .tsw-star:nth-child(2) { animation-delay: 0.09s; }
+.tsw-slide[data-pos="0"] .tsw-star:nth-child(3) { animation-delay: 0.14s; }
+.tsw-slide[data-pos="0"] .tsw-star:nth-child(4) { animation-delay: 0.19s; }
+.tsw-slide[data-pos="0"] .tsw-star:nth-child(5) { animation-delay: 0.24s; }
+
+@keyframes tsw-star-pop {
+    0%   { transform: scale(0.3) rotate(-30deg); opacity: 0; }
+    65%  { transform: scale(1.3) rotate(6deg); }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* ---------- Text ---------- */
+.tsw-text {
+    font-size: 15px;
+    line-height: 1.72;
+    color: var(--tsw-text);
+    margin: 0;
+    flex: 1;
+}
+
+/* ---------- Client Info ---------- */
+.tsw-client-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    align-items: center;
+}
+
+.tsw-client-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--tsw-gold);
+}
+
+.tsw-client-title {
+    font-size: 12.5px;
+    color: var(--tsw-text-muted);
+}
+
+/* ---------- Quote Icon ---------- */
+.tsw-quote-icon {
+    color: var(--tsw-gold);
+    opacity: 0.6;
+    margin-top: 4px;
+    transition: opacity 0.35s ease;
+}
+
+.tsw-slide[data-pos="0"] .tsw-quote-icon {
+    opacity: 1;
+    animation: tsw-quote-rise 0.5s ease 0.15s both;
+}
+
+@keyframes tsw-quote-rise {
+    from { transform: translateY(8px); opacity: 0; }
+    to   { transform: translateY(0);   opacity: 1; }
+}
+
+/* ============================================================
+   ANIMATING STATE (disable pointer events during transition)
+   ============================================================ */
+.tsw-stage.is-animating .tsw-slide {
+    pointer-events: none;
+}
+
+/* ============================================================
+   Editor preview fallback
+   ============================================================ */
+.tsw-editor-preview {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    overflow: hidden;
+    padding: 30px 0;
+}
+
+.tsw-editor-preview .tsw-slide {
+    position: relative;
+    top: auto; left: auto;
+    transform: none;
+    width: 300px;
+    opacity: 1;
+}
+
+.tsw-editor-preview .tsw-slide.tsw-active .tsw-card {
+    border-color: var(--tsw-gold);
+    background-color: var(--tsw-card-active-bg);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1440px) {
+    .tsw-slide { width: 400px; }
+
+    .tsw-slide[data-pos="-1"] { transform: translate(calc(-70% - 170px), calc(-57% + 28px)) scale(0.82); }
+    .tsw-slide[data-pos="-2"] { transform: translate(calc(-70% - 295px), calc(-63% + 52px)) scale(0.67); }
+    .tsw-slide[data-pos="1"]  { transform: translate(calc(-30% + 170px), calc(-57% + 28px)) scale(0.82); }
+    .tsw-slide[data-pos="2"]  { transform: translate(calc(-30% + 295px), calc(-63% + 52px)) scale(0.67); }
+}
+@media (max-width: 1199px) {
+    .tsw-slide { width: 360px; }
+
+    .tsw-slide[data-pos="-1"] { transform: translate(calc(-50% - 170px), calc(-57% + 28px)) scale(0.82); }
+    .tsw-slide[data-pos="-2"] { transform: translate(calc(-50% - 295px), calc(-63% + 52px)) scale(0.67); }
+    .tsw-slide[data-pos="1"]  { transform: translate(calc(-50% + 170px), calc(-57% + 28px)) scale(0.82); }
+    .tsw-slide[data-pos="2"]  { transform: translate(calc(-50% + 295px), calc(-63% + 52px)) scale(0.67); }
+
+    .tsw-nav-btn.tsw-prev {
+        left: 10px;
+    }
+    .tsw-nav-btn.tsw-next {
+        right: 10px;
+    }
+}
+@media (max-width: 860px) {
+    .tsw-slide { width: 300px; }
+    .tsw-stage { height: 420px; }
+
+    .tsw-slide[data-pos="-1"] { transform: translate(calc(-50% - 140px), calc(-55% + 24px)) scale(0.8); }
+    .tsw-slide[data-pos="-2"] { transform: translate(calc(-50% - 240px), calc(-60% + 46px)) scale(0.64); }
+    .tsw-slide[data-pos="1"]  { transform: translate(calc(-50% + 140px), calc(-55% + 24px)) scale(0.8); }
+    .tsw-slide[data-pos="2"]  { transform: translate(calc(-50% + 240px), calc(-60% + 46px)) scale(0.64); }
+
+    .tsw-prev { margin-right: 10px; }
+    .tsw-next { margin-left: 10px; }
+    .tsw-nav-btn { width: 40px; height: 40px; }
+}
+
+@media screen and (max-width: 767px){
+    .tsw-nav-btn.tsw-prev {
+        left: 0px;
+    }
+    .tsw-nav-btn.tsw-next {
+        right: 0px;
+    }
+}
+@media (max-width: 600px) {
+    /* .tsw-testimonial-section { padding: 60px 0; } */
+    .tsw-slide { width: 82vw; max-width: 300px; }
+    .tsw-stage { height: 400px; }
+
+    .tsw-slide[data-pos="-1"] { transform: translate(calc(-50% - 46vw), calc(-50% + 22px)) scale(0.78); opacity: 0.5; }
+    .tsw-slide[data-pos="-2"] { transform: translate(calc(-50% - 46vw), calc(-50% + 22px)) scale(0.78); opacity: 0.2; }
+    .tsw-slide[data-pos="1"]  { transform: translate(calc(-50% + 46vw), calc(-50% + 22px)) scale(0.78); opacity: 0.5; }
+    .tsw-slide[data-pos="2"]  { transform: translate(calc(-50% + 46vw), calc(-50% + 22px)) scale(0.78); opacity: 0.2; }
+
+    .tsw-nav-btn { width: 36px; height: 36px; }
+    .tsw-prev { margin-right: 6px; }
+    .tsw-next { margin-left: 6px; }
+}
+
+/* ============================================================
+   SLIDER MODE — pure horizontal slide, no fade / opacity tricks
+   ============================================================ */
+
+/* 1. Kill all transitions on slides, cards, avatar-ring so nothing
+      glides between stack positions */
+.tsw-testimonial-section.tsw-no-motion .tsw-slide {
+    transition: none !important;
+    animation: none !important;
+}
+.tsw-testimonial-section.tsw-no-motion .tsw-card,
+.tsw-testimonial-section.tsw-no-motion .tsw-avatar-ring {
+    transition: none !important;
+}
+
+/* 2a. NEXT → active card enters from the right */
+.tsw-testimonial-section.tsw-no-motion.tsw-dir-next .tsw-slide[data-pos="0"] {
+    animation: tsw-slide-from-right 0.40s cubic-bezier(0.22, 0.61, 0.36, 1) both !important;
+}
+@keyframes tsw-slide-from-right {
+    from { transform: translate(calc(-50% + 180px), -50%) translateZ(0) scale(1); }
+    to   { transform: translate(-50%, -50%) translateZ(0) scale(1); }
+}
+
+/* 2b. PREV → active card enters from the left */
+.tsw-testimonial-section.tsw-no-motion.tsw-dir-prev .tsw-slide[data-pos="0"] {
+    animation: tsw-slide-from-left 0.40s cubic-bezier(0.22, 0.61, 0.36, 1) both !important;
+}
+@keyframes tsw-slide-from-left {
+    from { transform: translate(calc(-50% - 180px), -50%) translateZ(0) scale(1); }
+    to   { transform: translate(-50%, -50%) translateZ(0) scale(1); }
+}

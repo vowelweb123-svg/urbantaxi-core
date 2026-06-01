@@ -1,0 +1,120 @@
+.team-carousel {
+    width: 100%;
+}
+.swiper-slide {
+    text-align: center;
+}
+.team-item img {
+    width: 100%;
+    border-radius: 6px;
+}
+.team-title {
+    /* margin-top: 10px; */
+    font-size: 18px;
+}
+/* Default dots */
+.swiper-pagination {
+    display: block !important;
+}
+.swiper-pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* Responsive dot visibility */
+@media (max-width: 767px) {
+    .team-carousel .swiper-pagination {
+        display: none !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .team-carousel .swiper-pagination {
+        display: block !important;
+    }
+}
+
+.swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+    background: #ccc;
+    opacity: 1;
+    transition: all 0.3s ease;
+    border-radius: 50px;
+}
+.swiper-pagination-bullet-active {
+    background: #000;
+}
+p.team-designation {
+    width: fit-content;
+    margin: 0 auto;
+}
+.team-content-item{
+    padding: 15px;
+    gap: 10px;
+    display: grid;
+}
+
+.team-item {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Social container */
+.team-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.team-social {
+    position: absolute;
+    bottom: -60px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    transition: all 0.4s ease;
+    display: flex;
+    gap: 10px;
+    margin: 0 auto;
+    justify-content: center;
+}
+
+.team-item:hover .team-social {
+    bottom: 20px;
+}
+#taxi-our-team-main-section .team-social a svg{
+    position: relative;
+    z-index: 1;
+    fill: #000;
+    width: 18px !important;
+    height: 18px !important;
+}
+.team-social a {
+    position: relative;
+    display: inline-block;
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 1;
+    background: #fff;
+    margin: 0 !important;
+}
+
+/* Base state */
+.team-social a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    transform: scale(0); /* hidden */
+    transition: transform 0.3s ease;
+    z-index: -1;
+    background: #FEBB1B;
+}
+/* Hover animation */
+.team-social a:hover::after {
+    transform: scale(1);
+    border-radius: 10px;
+}

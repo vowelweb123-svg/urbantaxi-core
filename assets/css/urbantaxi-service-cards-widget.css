@@ -1,0 +1,288 @@
+.post-query-widget {
+    position: relative;
+}
+.post-query-grid {
+    display: grid;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+.post-query-grid.loading {
+    opacity: 0.5;
+    pointer-events: none;
+}
+.post-query-item {
+    border: none;
+    border-radius: 8px;
+    padding: 0px;
+    box-shadow: none !important;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease, background-image 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    height: max-content;
+}
+.post-query-item .post-custom-meta{
+    width: 100px;
+    height: 100px;
+}
+.post-query-item .post-custom-meta{
+    border: 1px solid #FFFFFF26;
+    margin: 0 auto;
+}
+.post-query-item .post-custom-meta img{
+    object-fit: contain;
+    border-radius: 10px;
+    padding: 10px;
+    transition: all 1.5s;
+}
+.post-query-item:hover .post-custom-meta{
+    border: 2px solid transparent;
+}
+.post-query-item:hover .post-read-more-btn svg{
+    background-color: transparent !important;
+}
+.post-query-item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.post-thumbnail {
+    margin-bottom: 15px;
+}
+.post-thumbnail img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+.post-query-item h3 {
+    margin: 0 0 5px 0;
+    position: relative;
+/*     font-size: 18px; */
+}
+.post-query-item:hover h3:after{
+    background: #000;
+}
+.post-query-item h3:after{
+    content: '';
+    width: 50px;
+    height: 3px;
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    background: var(--urbantaxi-primary-theme-color);
+}
+.post-query-item .post-content {
+    padding: 30px 20px !important;
+}
+.post-custom-meta-image-box {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-bottom: 25px;
+	text-align: center;
+}
+.post-count-box {
+  font: 700 60px / 60px Lexend;
+  font-family: sans-serif;
+  -webkit-text-stroke-width: 1px;
+  color: #ffffff;
+    transition: color 0.3s ease;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  z-index: -1;
+  opacity: 0.1;
+}
+.post-query-grid .post-content .post-excerpt{
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+.home.urbantaxi-imported .post-query-widget .post-query-item .post-read-more-btn, .urbantaxi-imported .post-query-widget .post-query-item .post-read-more-btn {
+    width: 50px !important;
+    height: 50px !important;
+    margin-right: 0px;
+    padding: 16px !important;
+}
+.post-query-item .post-read-more-btn svg {
+    width: 100% !important;
+    height: 100% !important;
+    margin-right: 0px;
+}
+.post-query-item .post-read-more-btn{
+    position: relative;
+    z-index: 1;
+}
+.post-query-item h3 a {
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s ease;
+}
+.post-query-item h3 a:hover {
+    color: #007cba;
+}
+.post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #666;
+}
+.post-author,
+.post-date,
+.post-comments {
+    display: inline-block;
+}
+.post-excerpt {
+    color: #666;
+    line-height: 1.5;
+}
+.post-query-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.page-number,
+.pagination-arrow {
+    display: inline-block;
+    line-height: 50px;
+    text-align: center;
+    color: #333;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+}
+.page-number:hover,
+.page-number.active,
+.pagination-arrow:hover,
+.pagination-arrow.active {
+    background: #007cba;
+    color: #fff;
+}
+.pagination-arrow.disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+}
+/* Custom Meta Styles */
+.post-custom-meta {
+    display: inline-block;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+.post-custom-meta img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+/* Read More Button Styles */
+.post-read-more-wrapper {
+    margin-top: 15px;
+    display: flex;
+    justify-content: end;
+}
+.service-btn-text {
+    display: inline-block;
+}
+.post-query-item:hover .service-btn-text {
+    animation: text-bounce 0.5s ease forwards;
+}
+@keyframes text-bounce {
+    0%   { transform: translateX(0); }
+    70%  { transform: translateX(-45px); }
+    100% { transform: translateX(-40px); }
+}
+/* Ensure button text inherits color from the button when parent is hovered */
+.post-query-item .post-read-more-btn .service-btn-text {
+    color: inherit;
+    transition: color 0.3s ease;
+    align-self: center;
+}
+.post-query-item .post-read-more-btn {
+	display: flex !important;
+}
+/* Make SVG icons follow the current text color (helps hover color changes) */
+.post-query-item .post-read-more-btn svg,
+.post-query-item .post-read-more-btn svg path {
+    fill: currentColor;
+    color: inherit;
+    transition: fill 0.3s ease, color 0.3s ease;
+}
+.post-query-item .post-read-more-btn i {
+    color: inherit;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+@keyframes icon-bounce{
+    0% {
+        transform: translateX(0);
+    }
+    70% {
+        transform: translateX(145px);
+    }
+    100% {
+        transform: translateX(120px);
+    }
+}
+@keyframes text-bounce{
+    0% {
+    transform: translateX(0);
+    }
+    70% {
+        transform: translateX(-52px);
+    }
+    100% {
+        transform: translateX(-40px);
+    }
+}
+.post-query-item:hover .post-read-more-btn i,
+.post-query-item:hover .post-read-more-btn svg {
+    background-color: rgba(255,255,255,0.3);
+}
+/* Icon color/background on parent hover and direct hover */
+.post-read-more-btn:hover i,
+.post-read-more-btn:hover svg,
+.post-query-item:hover .post-read-more-btn i,
+.post-query-item:hover .post-read-more-btn svg {
+    color: #ffffff;
+    background-color: rgba(255,255,255,0.3);
+}
+/* Pagination Ellipsis */
+.pagination-ellipsis {
+    padding: 8px 12px;
+    color: #333;
+}
+.post-item-background-set {
+    background-color: #E1F500;
+    width: 100%;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    height: 0px;
+    border-radius: 6px;
+    transition: 0.8s all ease;
+    position: absolute;
+    bottom: 0;
+    z-index: 0;
+}
+.post-query-item{
+    position: relative;
+}
+.post-query-item:hover .post-item-background-set{
+    height: 100%;
+    width: 100%;
+    border-radius: 6px;
+}
+.post-query-widget .post-content{
+    position: relative;
+    z-index: 1;
+}
+.post-custom-meta-box{
+    justify-content: space-between;
+    flex-direction: row-reverse;
+}

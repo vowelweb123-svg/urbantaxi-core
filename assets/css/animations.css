@@ -1,0 +1,25 @@
+/**
+ * UrbanTaxi_Smart_Animations
+ * Accessible animations with prefers-reduced-motion support
+ * Version: 1.0.0
+ */
+
+.cp-disable-animation-yes{
+    animation: none !important; transition: none !important;
+}
+
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

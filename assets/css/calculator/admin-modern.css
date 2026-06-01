@@ -1,0 +1,126 @@
+/* Modern admin UI for calculator editor */
+.cc-admin-wrap {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  padding: 32px 28px;
+  max-width: 900px;
+  margin: 32px auto;
+}
+
+.cc-admin-wrap h1, .cc-admin-wrap h2 {
+  font-weight: 700;
+  color: #1a202c;
+  margin-bottom: 18px;
+}
+
+.cc-admin-wrap .form-table th {
+  text-align: left;
+  font-size: 15px;
+  color: #374151;
+  padding: 12px 12px 12px 0;
+  vertical-align: top;
+}
+
+.cc-admin-wrap .form-table td {
+  padding: 12px 0;
+}
+
+.cc-admin-wrap input[type="text"],
+.cc-admin-wrap input[type="number"],
+.cc-admin-wrap input[type="color"],
+.cc-admin-wrap textarea,
+.cc-admin-wrap select {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 15px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 4px;
+}
+
+.cc-admin-wrap input[type="color"] {
+  width: 48px;
+  height: 36px;
+  padding: 0;
+}
+
+.cc-admin-wrap .button,
+.cc-admin-wrap .button-primary {
+  border-radius: 8px;
+  font-size: 15px;
+  padding: 8px 22px;
+  margin-top: 10px;
+}
+
+.cc-admin-wrap .description {
+  color: #64748b;
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+#fields-builder {
+  margin-top: 32px;
+}
+
+#fields-list .field-item {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+}
+
+#fields-list .field-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+#fields-list .field-item-label {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+#fields-list .field-item-type {
+  font-size: 13px;
+  color: #64748b;
+}
+
+#fields-list .field-item-key {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+#fields-list .field-item-visibility {
+  font-size: 12px;
+  color: #e11d48;
+  margin-left: 8px;
+}
+
+#fields-list .field-item-actions .button {
+  margin-left: 6px;
+  margin-top: 0;
+}
+
+#field-modal .field-modal-content {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px 28px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.13);
+  max-width: 420px;
+  margin: 60px auto;
+}
+
+@media (max-width: 700px) {
+  .cc-admin-wrap {
+    padding: 12px 2vw;
+  }
+  #field-modal .field-modal-content {
+    padding: 18px 6px;
+  }
+}

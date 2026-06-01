@@ -1,0 +1,111 @@
+.urbantaxi-blog-card {
+    transition: all .3s ease;
+}
+.urbantaxi-blog-title {
+    transition: all .3s ease;
+}
+.urbantaxi-blog-meta {
+    transition: all .3s ease;
+    /* border-top: 1px solid #B3B2B0;
+    padding-top: 15px; */
+}
+.urbantaxi-blog-card .urbantaxi-blog-author-img{
+    width: 30px;
+    height: 30px !important;
+    border-radius: 50% !important;
+    margin-right: 5px;
+}
+.urbantaxi-blog-card {
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: #ffffff;
+    transition: all .3s ease;
+}
+.urbantaxi-blog-image {
+    height: 250px;
+}
+.urbantaxi-blog-image img{
+    height: 100% !important;
+    object-fit: cover;
+    width: 100%;
+    border-radius: 6px;
+}
+.urbantaxi-blog-categories {
+    margin-top: 12px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #6b7280;
+    transition: color .3s ease;
+    width: fit-content;
+}
+.urbantaxi-blog-card:hover,
+.urbantaxi-blog-card:focus-within {
+    background-color: #f5f6f8;
+}
+.urbantaxi-blog-card:hover .urbantaxi-blog-categories,
+.urbantaxi-blog-card:focus-within .urbantaxi-blog-categories {
+    color: var(--e-global-color-primary, #000);
+}
+.urbantaxi-blog-content{
+    display: grid;
+    gap: 15px;
+}
+.urbantaxi-blog-excerpt {
+    transition: color .3s ease;
+}
+.urbantaxi-blog-card:hover .urbantaxi-blog-excerpt,
+.urbantaxi-blog-card:focus-within .urbantaxi-blog-excerpt {
+    color: var(--e-global-color-primary, #000);
+}
+.swiper-button-prev,
+.swiper-button-next {
+    color: #000;
+}
+.swiper-pagination-bullet-active {
+    background: #000;
+}
+.urbantaxi-custom-pagination  {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.urbantaxi-custom-pagination button.active,.urbantaxi-custom-pagination button:hover{
+    border: none !important;
+}
+.urbantaxi-custom-pagination .utx-prev,
+.urbantaxi-custom-pagination .utx-next,
+.urbantaxi-custom-pagination .utx-page-item {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0 6px;
+    cursor: pointer;
+}
+.urbantaxi-custom-pagination .utx-prev:focus-visible,
+.urbantaxi-custom-pagination .utx-next:focus-visible,
+.urbantaxi-custom-pagination .utx-page-item:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+.urbantaxi-custom-pagination .utx-prev.disabled,
+.urbantaxi-custom-pagination .utx-next.disabled,
+.urbantaxi-custom-pagination .utx-page-item.disabled,
+.urbantaxi-custom-pagination .utx-prev:disabled,
+.urbantaxi-custom-pagination .utx-next:disabled,
+.urbantaxi-custom-pagination .utx-page-item:disabled {
+    opacity: 0;
+    cursor: not-allowed;
+}
+/* grid widget css */
+.urbantaxi-grid-container {
+    display: grid;
+    gap: 30px;
+}
+.urbantaxi-grid-item {
+    width: 100%;
+}
+.urbantaxi-meta-date .urbantaxi-meta-icon svg{
+    position: relative;
+    top: -2px;
+}
