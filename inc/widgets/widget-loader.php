@@ -8,6 +8,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+// Load classic WordPress widgets bundled in core plugin.
+require_once URBANTAXI_CORE_PLUGIN_DIR . 'inc/widgets/taxonomy/urbantaxi-taxonomy-widget.php';
+
 // =============================================================================
 // CONSTANTS — map each original plugin's path/URL constants into the core plugin
 // =============================================================================

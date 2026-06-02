@@ -1,13 +1,6 @@
 <?php
 /**
- * Plugin Name: UrbanTaxi Taxonomy Widget
- * Plugin URI: 
- * Description: Sidebar widgets to display taxonomy terms and recent posts with modern styling
- * Version: 1.0.0
- * Author: urbantaxi
- * Author URI: 
- * License: GPL v2 or later
- * Text Domain: urbantaxi-taxonomy-widget
+ * UrbanTaxi taxonomy and recent posts sidebar widgets.
  */
 
 // Exit if accessed directly

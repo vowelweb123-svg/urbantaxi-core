@@ -37,7 +37,7 @@
     max-width: unset;
     box-shadow: unset;
     border-radius: 6px;
-    background: var(--urbantaxi-tertiary-theme-color);
+    /* background: var(--urbantaxi-tertiary-theme-color); */
     border: 1px solid #FDC702;
 }
 .elementor-20 .elementor-element.elementor-element-e53551b .urbantaxi-modal-content {
