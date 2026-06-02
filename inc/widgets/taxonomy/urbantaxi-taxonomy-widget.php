@@ -28,7 +28,7 @@ add_action('widgets_init', 'urbantaxi_load_taxonomy_widget');
 function urbantaxi_taxonomy_widget_enqueue_styles() {
     wp_enqueue_style(
         'urbantaxi-taxonomy-widget',
-        URBANTAXI_TAXONOMY_WIDGET_URL . 'css/style.css',
+        URBANTAXI_CORE_PLUGIN_URL . 'assets/css/taxonomy-widget.css',
         array(),
         URBANTAXI_TAXONOMY_WIDGET_VERSION
     );

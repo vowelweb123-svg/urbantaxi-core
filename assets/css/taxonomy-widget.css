@@ -1,0 +1,115 @@
+/**
+ * UrbanTaxi Taxonomy Widget Styles
+ */
+.urbantaxi-taxonomy-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+/* Widget admin styles */
+.widget .urbantaxi-taxonomy-select,
+.widget .urbantaxi-term-select {
+    margin-top: 5px;
+}
+/* ===================================
+   Recent Posts Widget Styles
+   =================================== */
+.urbantaxi-recent-posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.urbantaxi-recent-post-item {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    background: #F5F5F5;
+    padding: 6px;
+    border-radius: 15px;
+}
+.urbantaxi-post-thumbnail {
+    flex-shrink: 0;
+    width: 70px;
+    height: 70px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+.urbantaxi-post-thumbnail a {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.urbantaxi-thumb-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+.urbantaxi-recent-post-item:hover .urbantaxi-thumb-image {
+    transform: scale(1.1);
+}
+.urbantaxi-post-content {
+    flex: 1;
+    min-width: 0;
+}
+.urbantaxi-post-title {
+    margin: 0 0 4px 0;
+    padding: 0;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 20px;
+}
+.urbantaxi-post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+    font-size: 12px;
+    color: #666;
+}
+.urbantaxi-post-date,
+.urbantaxi-post-comments {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+#urbantaxi_taxonomy_widget-3 .urbantaxi-taxonomy-list {
+    display: flex;
+    flex-direction: unset;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+#urbantaxi_taxonomy_widget-3 .urbantaxi-taxonomy-list .urbantaxi-arrow{
+    display: none;
+}
+/* Responsive adjustments for Recent Posts */
+@media (max-width: 768px) {
+    .urbantaxi-pages-sidebae-main-box .sidebar-widget{
+        padding: 20px 10px;
+    }
+    .urbantaxi-recent-posts-title {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    .urbantaxi-post-thumbnail {
+        width: 70px;
+        height: 70px;
+    }
+    .urbantaxi-post-title {
+        font-size: 15px;
+    }
+    .urbantaxi-post-meta {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .urbantaxi-post-thumbnail {
+        width: 60px;
+        height: 60px;
+    }
+    .urbantaxi-post-title {
+        font-size: 14px;
+    }
+}
