@@ -50,39 +50,27 @@ class UrbanTaxi_Smart_Animations_Elementor {
      * Initialize hooks
      */
     private function init_hooks() {
-        // Add animation controls before Custom CSS section starts
-        add_action('elementor/element/before_section_start', array($this, 'register_animation_section'), 10, 3);
         
         // Render animation classes on frontend for all elements
         add_action('elementor/frontend/widget/before_render', array($this, 'render_animation_classes'));
         add_action('elementor/frontend/section/before_render', array($this, 'render_animation_classes'));
         add_action('elementor/frontend/container/before_render', array($this, 'render_animation_classes'));
         add_action('elementor/frontend/column/before_render', array($this, 'render_animation_classes'));
+
+        add_action( 'elementor/element/section/section_advanced/after_section_end', [ $this, 'add_animation_controls' ], 10, 2 );
+        add_action( 'elementor/element/column/section_advanced/after_section_end', [ $this, 'add_animation_controls' ], 10, 2 );
+        add_action( 'elementor/element/container/section_layout/after_section_end', [ $this, 'add_animation_controls' ], 10, 2 );
+        add_action( 'elementor/element/common/_section_style/after_section_end', [ $this, 'add_animation_controls' ], 10, 2 );
         
-        // Add custom CSS for Elementor editor
-        add_action('wp_enqueue_scripts', [$this, 'editor_styles']);
-        add_action('elementor/editor/after_enqueue_styles', [$this, 'editor_styles']);
+        // Enqueue frontend and editor assets
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_frontend_assets']);
+        add_action('elementor/editor/after_enqueue_styles', [$this, 'enqueue_editor_assets']);
+        add_action('elementor/editor/after_enqueue_scripts', [$this, 'enqueue_editor_assets']);
         
         // Register custom animations in Elementor
         add_filter('elementor/controls/animations/additional_animations', array($this, 'register_custom_animations'));
 
-        add_action('elementor/editor/after_enqueue_scripts', function () {
-            wp_enqueue_script('urbantaxi-smart-animations-editor-custom-animations-js', URBANTAXI_SMART_ANIMATIONS_URL . 'assets/js/animations.js', array('jquery', 'elementor-editor'), URBANTAXI_SMART_ANIMATIONS_VERSION, true);
-        });
-
     }
-
-    /**
-     * Register animation section before Custom CSS section
-     */
-    public function register_animation_section($element, $section_id, $args) {
-        if ($section_id === 'section_custom_css_pro') {
-            $this->add_animation_controls($element, $args);
-        }
-    }
-    // public function register_animation_section($element, $section_id, $args) {
-    //     $this->add_animation_controls($element, $args);
-    // }
 
     /**
      * Get Animate.css animations
@@ -120,6 +108,83 @@ class UrbanTaxi_Smart_Animations_Elementor {
         }
 
         return $options;
+    }
+    /**
+     * Enqueue frontend assets
+     */
+    public function enqueue_frontend_assets() {
+        // Enqueue animate.css
+        wp_enqueue_style(
+            'urbantaxi-smart-animations-animate-css',
+            URBANTAXI_SMART_ANIMATIONS_URL . 'assets/css/animate.min.css',
+            array(),
+            URBANTAXI_SMART_ANIMATIONS_VERSION
+        );
+        
+        // Enqueue vivify.css
+        wp_enqueue_style(
+            'urbantaxi-smart-animations-vivify-css',
+            URBANTAXI_SMART_ANIMATIONS_URL . 'assets/css/vivify.min.css',
+            array(),
+            URBANTAXI_SMART_ANIMATIONS_VERSION
+        );
+        
+        // Enqueue custom animations CSS
+        wp_enqueue_style(
+            'urbantaxi-smart-animations-css',
+            URBANTAXI_SMART_ANIMATIONS_URL . 'assets/css/animations.css',
+            array(),
+            URBANTAXI_SMART_ANIMATIONS_VERSION
+        );
+        
+        // Enqueue animations JavaScript for frontend
+        wp_enqueue_script(
+            'urbantaxi-smart-animations-frontend-js',
+            URBANTAXI_SMART_ANIMATIONS_URL . 'assets/js/animations.js',
+            array('jquery'),
+            URBANTAXI_SMART_ANIMATIONS_VERSION,
+            true
+        );
+    }
+    
+    /**
+     * Enqueue editor assets
+     */
+    public function enqueue_editor_assets() {
+        // Enqueue animate.css
+        wp_enqueue_style(
+            'urbantaxi-smart-animations-animate-css',
+            URBANTAXI_SMART_ANIMATIONS_URL . 'assets/css/animate.min.css',
+            array(),
+            URBANTAXI_SMART_ANIMATIONS_VERSION
+        );
+        
+        // Enqueue vivify.css
+        wp_enqueue_style(
+            'urbantaxi-smart-animations-vivify-css',
+            URBANTAXI_SMART_ANIMATIONS_URL . 'assets/css/vivify.min.css',
+            array(),
+            URBANTAXI_SMART_ANIMATIONS_VERSION
+        );
+        
+        // Enqueue custom animations CSS
+        wp_enqueue_style(
+            'urbantaxi-smart-animations-css',
+            URBANTAXI_SMART_ANIMATIONS_URL . 'assets/css/animations.css',
+            array(),
+            URBANTAXI_SMART_ANIMATIONS_VERSION
+        );
+        
+        // Enqueue animations JavaScript for editor only on script enqueue
+        if ( did_action( 'elementor/editor/after_enqueue_scripts' ) ) {
+            wp_enqueue_script(
+                'urbantaxi-smart-animations-editor-custom-animations-js',
+                URBANTAXI_SMART_ANIMATIONS_URL . 'assets/js/animations.js',
+                array('jquery', 'elementor-editor'),
+                URBANTAXI_SMART_ANIMATIONS_VERSION,
+                true
+            );
+        }
     }
     
     /**

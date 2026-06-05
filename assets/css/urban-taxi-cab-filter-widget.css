@@ -37,11 +37,13 @@
     cursor: pointer;
     border-radius: 5px;
     margin-bottom: 5px;
+    color: #000;
 }
 .utcfw-filter h3{
     border-bottom: 1px solid #000;
     padding: 15px;
     font: 500 20px / 20px Lexend;
+    color: #000;
 }
 .utcfw-filter li.active, .utcfw-filter li:hover {
     background: #000;
@@ -49,13 +51,15 @@
     border-radius: 6px;
     padding: 10px 20px;
 }
-.utcfw-content h4{
+.utcfw-content h4 a{
     font: 500 18px / 18px Lexend;   
+    color: #000;
 }
 .utcfw-content {
     padding: 10px;
     display: grid;
     gap: 10px;
+    color: #000;
 }
 .utcfw-dots{
     color: #fff;
@@ -165,6 +169,7 @@
 }
 .utcfw-meta-button-box .utcfw-price{
     margin: 0;
+    color: #000;
 }
 @media screen and (max-width: 575px ){
     .utcfw-wrapper {
