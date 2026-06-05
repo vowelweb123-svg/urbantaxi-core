@@ -1474,10 +1474,6 @@ class UrbanTaxi_Service_Cards_Widget extends Widget_Base
 
                     </div>
 
-                    <div class="post-item-background-set">
-                        <!-- post background -->
-                    </div>
-
                 </div>
                 <?php
                 $i++;

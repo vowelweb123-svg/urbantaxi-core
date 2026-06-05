@@ -80,6 +80,9 @@ class UrbanTaxi_Smart_Animations_Elementor {
             $this->add_animation_controls($element, $args);
         }
     }
+    // public function register_animation_section($element, $section_id, $args) {
+    //     $this->add_animation_controls($element, $args);
+    // }
 
     /**
      * Get Animate.css animations

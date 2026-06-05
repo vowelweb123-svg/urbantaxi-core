@@ -12,6 +12,10 @@
 }
 .utcfw-image{
     background: #444242;
+    height: 220px;
+}
+.urbantaxi-imported .utcfw-image img {
+    object-fit: contain;
 }
 .utcfw-image img {
     max-height: 100%;
@@ -129,7 +133,7 @@
 }
 /* ICON FIX */
 .utcfw-page i {
-    font-size: 14px;
+    font-size: 20px;
 }
 .utcfw-readmore {
     display: inline-block;

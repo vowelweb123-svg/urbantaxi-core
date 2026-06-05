@@ -18,30 +18,35 @@ function utcb_get_shop_url($url = '')
         return $url;
     }
 
-    // Prefer the custom shop-2-2 page when no explicit URL is provided.
-    $preferred_url = home_url('/shop-2-2/');
-    $preferred_page_id = url_to_postid($preferred_url);
-    if (!empty($preferred_page_id)) {
-        $preferred_page_url = get_permalink($preferred_page_id);
-        if (!empty($preferred_page_url)) {
-            return $preferred_page_url;
+    // Prefer the "Taxis" page (slug: all-cars) when no explicit URL is provided.
+    $taxis_page = get_page_by_path('all-cars');
+
+    if ($taxis_page) {
+        $taxis_page_url = get_permalink($taxis_page->ID);
+
+        if (!empty($taxis_page_url)) {
+            return $taxis_page_url;
         }
     }
 
-    // Try to get WooCommerce shop page
+    // Try to get WooCommerce shop page.
     if (function_exists('wc_get_page_id')) {
-        $shop_page_id = wc_get_page_id('shop-2-2');
-        if ($shop_page_id) {
+        $shop_page_id = wc_get_page_id('shop');
+
+        if ($shop_page_id && $shop_page_id > 0) {
             $shop_url = get_permalink($shop_page_id);
-            if ($shop_url) {
+
+            if (!empty($shop_url)) {
                 return $shop_url;
             }
         }
     }
 
-    // Fallback to home URL if shop page not found
-    return home_url('/shop/');
+    // Final fallback.
+    return home_url('/all-cars/');
 }
+
+
 
 /**
  * Normalize Elementor icon control value (array or JSON string from AJAX).
@@ -204,6 +209,7 @@ function urban_taxi_cab_booking_slider_render_post_card($post_id, $rent_id, $ter
             <?php if ($rent_id):
                 $km_price = get_post_meta($rent_id, 'mptbm_km_price', true);
                 $extra_info_desc = get_post_meta($rent_id, 'mptbm_extra_info', true);
+                $initial_price = get_post_meta($rent_id, 'mptbm_initial_price', true);
 
                 $seating_capacity = '';
                 $additional_charge_km = '';
@@ -233,7 +239,7 @@ function urban_taxi_cab_booking_slider_render_post_card($post_id, $rent_id, $ter
                                          <p class="extra-info"><?php echo esc_html($extra_info_desc); ?></p>
                                      <?php endif; */ ?>
                 <div class="utcb-taxi-meta">
-                    <?php if ($additional_passenger): ?>
+                    <?php if ($initial_price): ?>
                         <div class="cabs-booking-contents">
                             <div>
                                 <?php
@@ -244,7 +250,7 @@ function urban_taxi_cab_booking_slider_render_post_card($post_id, $rent_id, $ter
                                 ?>
                                 <strong>Base Fare</strong>
                             </div>
-                            <div class="counts"><?php echo esc_html($currency_symbol); ?><?php echo esc_html($additional_passenger); ?></div>
+                            <div class="counts"><?php echo esc_html($currency_symbol); ?><?php echo esc_html($initial_price); ?></div>
                         </div>
                     <?php endif; ?>
                     <?php if ($seating_capacity): ?>

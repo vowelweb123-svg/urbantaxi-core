@@ -631,6 +631,8 @@
     color: inherit;
     transition: color 0.25s ease;
     width: 100%;
+    position: relative;
+    top: 2px;
 }
 
 .utcb-view-all-location-inner:hover {

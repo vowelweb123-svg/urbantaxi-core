@@ -294,30 +294,6 @@ class Heading_Style_Widget extends \Elementor\Widget_Base
             ]
         );
 
-        $this->add_control(
-            'text_align',
-            [
-                'label' => __('Text Alignment', 'heading-style-widget'),
-                'type' => \Elementor\Controls_Manager::CHOOSE,
-                'options' => [
-                    'left' => [
-                        'title' => __('Left', 'heading-style-widget'),
-                        'icon' => 'eicon-text-align-left',
-                    ],
-                    'center' => [
-                        'title' => __('Center', 'heading-style-widget'),
-                        'icon' => 'eicon-text-align-center',
-                    ],
-                    'right' => [
-                        'title' => __('Right', 'heading-style-widget'),
-                        'icon' => 'eicon-text-align-right',
-                    ],
-                ],
-                // 'default' => 'left',
-                'toggle' => true,
-            ]
-        );
-
         $this->end_controls_section();
 
         // Style Tab
@@ -359,6 +335,33 @@ class Heading_Style_Widget extends \Elementor\Widget_Base
             ]
         );
 
+        $this->add_responsive_control(
+            'style_text_align',
+            [
+                'label' => __('Text Alignment', 'heading-style-widget'),
+                'type' => \Elementor\Controls_Manager::CHOOSE,
+                'options' => [
+                    'left' => [
+                        'title' => __('Left', 'heading-style-widget'),
+                        'icon' => 'eicon-text-align-left',
+                    ],
+                    'center' => [
+                        'title' => __('Center', 'heading-style-widget'),
+                        'icon' => 'eicon-text-align-center',
+                    ],
+                    'right' => [
+                        'title' => __('Right', 'heading-style-widget'),
+                        'icon' => 'eicon-text-align-right',
+                    ],
+                ],
+                'default' => 'left',
+                'toggle' => true,
+                'selectors' => [
+                    '{{WRAPPER}} .heading-style-widget-wrapper' => 'text-align: {{VALUE}};',
+                ],
+            ]
+        );
+
         $this->end_controls_section();
     }
 
@@ -372,7 +375,6 @@ class Heading_Style_Widget extends \Elementor\Widget_Base
         $heading_tag = !empty($settings['heading_tag']) ? $settings['heading_tag'] : 'h2';
         $heading_text = isset($settings['heading_text']) ? $settings['heading_text'] : '';
         $highlight_words = isset($settings['highlight_words']) ? $settings['highlight_words'] : [];
-        $text_align = isset($settings['text_align']) ? $settings['text_align'] : 'left';
 
         // Per-instance unique class to avoid conflicts when multiple widgets present
         $instance_id = method_exists($this, 'get_id') ? $this->get_id() : uniqid('hsw_');
@@ -454,7 +456,7 @@ class Heading_Style_Widget extends \Elementor\Widget_Base
             ],
         ]);
 
-        echo '<div class="' . esc_attr($wrapper_class) . '" style="text-align: ' . esc_attr($text_align) . ';">';
+        echo '<div class="heading-style-widget-wrapper ' . esc_attr($wrapper_class) . '">';
         printf('<%1$s class="heading-style-widget-heading">%2$s</%1$s>', esc_attr($heading_tag), wp_kses($processed_text, ['span' => ['class' => true, 'style' => true]]));
         echo '</div>';
     }

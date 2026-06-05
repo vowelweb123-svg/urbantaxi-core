@@ -23,201 +23,243 @@ use Elementor\Group_Control_Typography;
 // Guarded with function_exists() so they coexist if the old plugin is active.
 // ---------------------------------------------------------------------------
 
-if ( ! function_exists( 'utcb_get_shop_url' ) ) {
-    function utcb_get_shop_url( $url = '' ) {
-        if ( ! empty( $url ) ) {
+if (!function_exists('utcb_get_shop_url')) {
+    function utcb_get_shop_url($url = '')
+    {
+
+        // If a URL is explicitly provided, use it.
+        if (!empty($url)) {
             return $url;
         }
-        $preferred_url     = home_url( '/shop-2-2/' );
-        $preferred_page_id = url_to_postid( $preferred_url );
-        if ( ! empty( $preferred_page_id ) ) {
-            $preferred_page_url = get_permalink( $preferred_page_id );
-            if ( ! empty( $preferred_page_url ) ) {
-                return $preferred_page_url;
+
+        // Prefer the "Taxis" page (slug: all-cars).
+        $taxis_page = get_page_by_path('all-cars');
+
+        if ($taxis_page) {
+            $taxis_page_url = get_permalink($taxis_page->ID);
+
+            if (!empty($taxis_page_url)) {
+                return $taxis_page_url;
             }
         }
-        if ( function_exists( 'wc_get_page_id' ) ) {
-            $shop_page_id = wc_get_page_id( 'shop-2-2' );
-            if ( $shop_page_id ) {
-                $shop_url = get_permalink( $shop_page_id );
-                if ( $shop_url ) {
+
+        // Fallback to WooCommerce shop page if available.
+        if (function_exists('wc_get_page_id')) {
+            $shop_page_id = wc_get_page_id('shop');
+
+            if ($shop_page_id && $shop_page_id > 0) {
+                $shop_url = get_permalink($shop_page_id);
+
+                if (!empty($shop_url)) {
                     return $shop_url;
                 }
             }
         }
-        return home_url( '/shop/' );
+
+        // Final fallback.
+        return home_url('/all-cars/');
     }
 }
 
-if ( ! function_exists( 'utcb_normalize_elementor_icon_setting' ) ) {
-    function utcb_normalize_elementor_icon_setting( $icon ) {
-        if ( empty( $icon ) ) {
+if (!function_exists('utcb_normalize_elementor_icon_setting')) {
+    function utcb_normalize_elementor_icon_setting($icon)
+    {
+        if (empty($icon)) {
             return [];
         }
-        if ( is_string( $icon ) ) {
-            $decoded = json_decode( $icon, true );
-            $icon    = is_array( $decoded ) ? $decoded : [];
+        if (is_string($icon)) {
+            $decoded = json_decode($icon, true);
+            $icon = is_array($decoded) ? $decoded : [];
         }
-        if ( ! is_array( $icon ) || empty( $icon['value'] ) ) {
+        if (!is_array($icon) || empty($icon['value'])) {
             return [];
         }
         return $icon;
     }
 }
 
-if ( ! function_exists( 'utcb_maybe_enqueue_font_awesome_for_icon' ) ) {
-    function utcb_maybe_enqueue_font_awesome_for_icon( array $icon ) {
-        $lib = isset( $icon['library'] ) ? $icon['library'] : '';
-        if ( in_array( $lib, [ 'fa-solid', 'fa-regular', 'fa-brands' ], true ) ) {
-            wp_enqueue_style( 'font-awesome' );
+if (!function_exists('utcb_maybe_enqueue_font_awesome_for_icon')) {
+    function utcb_maybe_enqueue_font_awesome_for_icon(array $icon)
+    {
+        $lib = isset($icon['library']) ? $icon['library'] : '';
+        if (in_array($lib, ['fa-solid', 'fa-regular', 'fa-brands'], true)) {
+            wp_enqueue_style('font-awesome');
         }
     }
 }
 
-if ( ! function_exists( 'utcb_render_elementor_icon_html' ) ) {
-    function utcb_render_elementor_icon_html( array $icon, array $attr = [] ) {
-        if ( empty( $icon ) ) {
+if (!function_exists('utcb_render_elementor_icon_html')) {
+    function utcb_render_elementor_icon_html(array $icon, array $attr = [])
+    {
+        if (empty($icon)) {
             return '';
         }
-        utcb_maybe_enqueue_font_awesome_for_icon( $icon );
+        utcb_maybe_enqueue_font_awesome_for_icon($icon);
         ob_start();
-        \Elementor\Icons_Manager::render_icon( $icon, $attr );
+        \Elementor\Icons_Manager::render_icon($icon, $attr);
         return ob_get_clean();
     }
 }
 
-if ( ! function_exists( 'utcb_get_post_data' ) ) {
-    function utcb_get_post_data( $post_id ) {
-        $rent_id = get_post_meta( $post_id, 'link_mptbm_id', true );
+if (!function_exists('utcb_get_post_data')) {
+    function utcb_get_post_data($post_id)
+    {
+        $rent_id = get_post_meta($post_id, 'link_mptbm_id', true);
 
         $image_url = '';
-        if ( $rent_id ) {
-            $image_url = get_the_post_thumbnail_url( $rent_id, 'large' );
+        if ($rent_id) {
+            $image_url = get_the_post_thumbnail_url($rent_id, 'large');
         }
-        if ( ! $image_url && has_post_thumbnail( $post_id ) ) {
-            $image_url = get_the_post_thumbnail_url( $post_id, 'large' );
+        if (!$image_url && has_post_thumbnail($post_id)) {
+            $image_url = get_the_post_thumbnail_url($post_id, 'large');
         }
 
         $term_ids = [];
-        if ( $rent_id ) {
-            $terms = get_the_terms( $rent_id, 'mptbm_category' );
-            if ( $terms && ! is_wp_error( $terms ) ) {
-                $term_ids = wp_list_pluck( $terms, 'term_id' );
+        if ($rent_id) {
+            $terms = get_the_terms($rent_id, 'mptbm_category');
+            if ($terms && !is_wp_error($terms)) {
+                $term_ids = wp_list_pluck($terms, 'term_id');
             }
         }
 
-        $extra_info = $rent_id ? get_post_meta( $rent_id, 'mptbm_extra_info', true ) : '';
+        $extra_info = $rent_id ? get_post_meta($rent_id, 'mptbm_extra_info', true) : '';
 
-        $loc_terms = $rent_id ? get_the_terms( $rent_id, 'locations' ) : [];
-        $location  = ( ! empty( $loc_terms ) && ! is_wp_error( $loc_terms ) ) ? $loc_terms[0]->name : '';
+        $loc_terms = $rent_id ? get_the_terms($rent_id, 'locations') : [];
+        $location = (!empty($loc_terms) && !is_wp_error($loc_terms)) ? $loc_terms[0]->name : '';
 
         return [
-            'post_id'         => $post_id,
-            'rent_id'         => $rent_id,
-            'image_url'       => $image_url,
-            'category_string' => implode( ',', array_map( 'intval', $term_ids ) ),
-            'extra_info'      => $extra_info,
-            'location'        => $location,
+            'post_id' => $post_id,
+            'rent_id' => $rent_id,
+            'image_url' => $image_url,
+            'category_string' => implode(',', array_map('intval', $term_ids)),
+            'extra_info' => $extra_info,
+            'location' => $location,
         ];
     }
 }
 
-if ( ! function_exists( 'urban_taxi_cab_booking_slider_render_post_card' ) ) {
-    function urban_taxi_cab_booking_slider_render_post_card( $post_id, $rent_id, $term_ids, $settings ) {
-        $settings = wp_parse_args( $settings, [
-            'show_read_more'   => 'yes',
-            'read_more_text'   => 'Read More',
-            'read_more_align'  => 'left',
-            'read_more_icon'   => [],
-            'read_more_url'    => [],
+if (!function_exists('urban_taxi_cab_booking_slider_render_post_card')) {
+    function urban_taxi_cab_booking_slider_render_post_card($post_id, $rent_id, $term_ids, $settings)
+    {
+        $settings = wp_parse_args($settings, [
+            'show_read_more' => 'yes',
+            'read_more_text' => 'Read More',
+            'read_more_align' => 'left',
+            'read_more_icon' => [],
+            'read_more_url' => [],
             'content_meta_icon' => [],
-        ] );
+        ]);
 
-        $read_more_icon = utcb_normalize_elementor_icon_setting( $settings['read_more_icon'] );
-        $icon_html      = utcb_render_elementor_icon_html(
+        $read_more_icon = utcb_normalize_elementor_icon_setting($settings['read_more_icon']);
+        $icon_html = utcb_render_elementor_icon_html(
             $read_more_icon,
-            [ 'aria-hidden' => 'true', 'class' => 'post-read-more-icon' ]
+            ['aria-hidden' => 'true', 'class' => 'post-read-more-icon']
         );
 
-        $content_meta_icon        = utcb_normalize_elementor_icon_setting( $settings['content_meta_icon'] );
+        $content_meta_icon = utcb_normalize_elementor_icon_setting($settings['content_meta_icon']);
         $content_meta_icon_prefix = '';
-        if ( ! empty( $content_meta_icon ) ) {
+        if (!empty($content_meta_icon)) {
             $meta_raw = utcb_render_elementor_icon_html(
                 $content_meta_icon,
-                [ 'class' => 'utcb-meta-icon', 'aria-hidden' => 'true' ]
+                ['class' => 'utcb-meta-icon', 'aria-hidden' => 'true']
             );
-            if ( $meta_raw !== '' ) {
+            if ($meta_raw !== '') {
                 $content_meta_icon_prefix = '<span class="me-2 utcb-meta-icon-wrap">' . $meta_raw . '</span> '; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             }
         }
 
-        $currency_symbol = function_exists( 'get_woocommerce_currency_symbol' ) ? get_woocommerce_currency_symbol() : '';
+        $currency_symbol = function_exists('get_woocommerce_currency_symbol') ? get_woocommerce_currency_symbol() : '';
         ?>
         <div class="utcb-post-item utcb-post-card">
             <div class="utcb-post-content-block">
-                <?php if ( $rent_id ) :
-                    $km_price              = get_post_meta( $rent_id, 'mptbm_km_price', true );
-                    $extra_info_desc       = get_post_meta( $rent_id, 'mptbm_extra_info', true );
-                    $seating_capacity      = '';
-                    $additional_charge_km  = '';
-                    $additional_passenger  = '';
-                    $features              = get_post_meta( $rent_id, 'mptbm_features', true );
-                    if ( ! empty( $features ) && is_array( $features ) ) {
-                        foreach ( $features as $feature ) {
-                            if ( ! isset( $feature['label'] ) ) { continue; }
-                            $label = trim( $feature['label'] );
-                            if ( $label === 'Seating Capacity' )       { $seating_capacity     = $feature['text']; }
-                            if ( $label === 'Additional Charge/Km' )   { $additional_charge_km = $feature['text']; }
-                            if ( $label === 'Additional Passenger' )   { $additional_passenger = $feature['text']; }
+                <?php if ($rent_id):
+                    $km_price = get_post_meta($rent_id, 'mptbm_km_price', true);
+                    $extra_info_desc = get_post_meta($rent_id, 'mptbm_extra_info', true);
+                    $initial_price = get_post_meta($rent_id, 'mptbm_initial_price', true);
+                    $seating_capacity = '';
+                    $additional_charge_km = '';
+                    $additional_passenger = '';
+                    $features = get_post_meta($rent_id, 'mptbm_features', true);
+                    if (!empty($features) && is_array($features)) {
+                        foreach ($features as $feature) {
+                            if (!isset($feature['label'])) {
+                                continue;
+                            }
+                            $label = trim($feature['label']);
+                            if ($label === 'Seating Capacity') {
+                                $seating_capacity = $feature['text'];
+                            }
+                            if ($label === 'Additional Charge/Km') {
+                                $additional_charge_km = $feature['text'];
+                            }
+                            if ($label === 'Additional Passenger') {
+                                $additional_passenger = $feature['text'];
+                            }
                         }
                     }
                     ?>
                     <div class="utcb-taxi-meta">
-                        <?php if ( $additional_passenger ) : ?>
+                       <?php if ($initial_price): ?>
                             <div class="cabs-booking-contents">
                                 <div>
-                                    <?php if ( $content_meta_icon_prefix ) { echo $content_meta_icon_prefix; } // phpcs:ignore ?>
+                                    <?php if ($content_meta_icon_prefix) {
+                                        echo $content_meta_icon_prefix;
+                                    } // phpcs:ignore ?>
                                     <strong>Base Fare</strong>
                                 </div>
-                                <div class="counts"><?php echo esc_html( $currency_symbol ); ?><?php echo esc_html( $additional_passenger ); ?></div>
+                                <div class="counts">
+                                    <?php echo esc_html($currency_symbol); ?>                <?php echo esc_html($initial_price); ?></div>
                             </div>
                         <?php endif; ?>
-                        <?php if ( $seating_capacity ) : ?>
+                        <?php if ($seating_capacity): ?>
                             <div class="cabs-booking-contents">
                                 <div>
-                                    <?php if ( $content_meta_icon_prefix ) { echo $content_meta_icon_prefix; } // phpcs:ignore ?>
+                                    <?php if ($content_meta_icon_prefix) {
+                                        echo $content_meta_icon_prefix;
+                                    } // phpcs:ignore ?>
                                     <strong>Passenger Seats</strong>
                                 </div>
-                                <div class="counts"><?php echo esc_html( $seating_capacity ); ?></div>
+                                <div class="counts"><?php echo esc_html($seating_capacity); ?></div>
                             </div>
                         <?php endif; ?>
-                        <?php if ( $additional_charge_km ) : ?>
+                        <?php if ($additional_charge_km): ?>
                             <div class="cabs-booking-contents">
                                 <div>
-                                    <?php if ( $content_meta_icon_prefix ) { echo $content_meta_icon_prefix; } // phpcs:ignore ?>
+                                    <?php if ($content_meta_icon_prefix) {
+                                        echo $content_meta_icon_prefix;
+                                    } // phpcs:ignore ?>
                                     <strong>Additional Charge / KM</strong>
                                 </div>
-                                <div class="counts"><?php echo esc_html( $currency_symbol ); ?><?php echo esc_html( $additional_charge_km ); ?></div>
+                                <div class="counts">
+                                    <?php echo esc_html($currency_symbol); ?>                <?php echo esc_html($additional_charge_km); ?></div>
                             </div>
                         <?php endif; ?>
                     </div>
                 <?php endif; ?>
                 <div class="cabs-booking-price-button">
-                    <?php if ( $settings['show_read_more'] === 'yes' ) : ?>
-                        <div class="post-read-more-wrapper" style="text-align: <?php echo esc_attr( $settings['read_more_align'] ); ?>;">
+                    <?php if ($settings['show_read_more'] === 'yes'): ?>
+                        <div class="post-read-more-wrapper"
+                            style="text-align: <?php echo esc_attr($settings['read_more_align']); ?>;">
                             <?php
                             $button_url_ajax = '#';
-                            if ( ! empty( $settings['read_more_url']['url'] ) ) {
+                            if (!empty($settings['read_more_url']['url'])) {
                                 $button_url_ajax = $settings['read_more_url']['url'];
                             } else {
-                                $booking_page = get_page_by_path( 'booking-form' );
-                                if ( ! $booking_page ) { $booking_page = get_page_by_title( 'Booking Form' ); }
-                                if ( $booking_page ) { $button_url_ajax = get_permalink( $booking_page->ID ); }
+                                $booking_page = get_page_by_path('booking-form');
+                                if (!$booking_page) {
+                                    $booking_page = get_page_by_title('Booking Form');
+                                }
+                                if ($booking_page) {
+                                    $button_url_ajax = get_permalink($booking_page->ID);
+                                }
                             }
                             ?>
-                            <a href="<?php echo esc_url( $button_url_ajax ); ?>" class="post-read-more-btn" target="_blank" rel="noopener">
-                                <span class="car-booking-btn-text"><?php echo esc_html( $settings['read_more_text'] ); ?></span>
-                                <?php if ( $icon_html ) { echo $icon_html; } // phpcs:ignore ?>
+                            <a href="<?php echo esc_url($button_url_ajax); ?>" class="post-read-more-btn" target="_blank"
+                                rel="noopener">
+                                <span class="car-booking-btn-text"><?php echo esc_html($settings['read_more_text']); ?></span>
+                                <?php if ($icon_html) {
+                                    echo $icon_html;
+                                } // phpcs:ignore ?>
                             </a>
                         </div>
                     <?php endif; ?>
@@ -226,11 +268,16 @@ if ( ! function_exists( 'urban_taxi_cab_booking_slider_render_post_card' ) ) {
             <div class="utcb-post-media-block d-none">
                 <?php
                 $image_url = '';
-                if ( $rent_id ) { $image_url = get_the_post_thumbnail_url( $rent_id, 'large' ); }
-                if ( ! $image_url && has_post_thumbnail( $post_id ) ) { $image_url = get_the_post_thumbnail_url( $post_id, 'large' ); }
+                if ($rent_id) {
+                    $image_url = get_the_post_thumbnail_url($rent_id, 'large');
+                }
+                if (!$image_url && has_post_thumbnail($post_id)) {
+                    $image_url = get_the_post_thumbnail_url($post_id, 'large');
+                }
                 ?>
-                <?php if ( $image_url ) : ?>
-                    <img src="<?php echo esc_url( $image_url ); ?>" class="utcb-post-thumbnail" alt="<?php echo esc_attr( get_the_title() ); ?>">
+                <?php if ($image_url): ?>
+                    <img src="<?php echo esc_url($image_url); ?>" class="utcb-post-thumbnail"
+                        alt="<?php echo esc_attr(get_the_title()); ?>">
                 <?php endif; ?>
             </div>
         </div>
@@ -238,120 +285,124 @@ if ( ! function_exists( 'urban_taxi_cab_booking_slider_render_post_card' ) ) {
     }
 }
 
-if ( ! function_exists( 'urban_taxi_cab_get_post_info' ) ) {
-    function urban_taxi_cab_get_post_info() {
-        check_ajax_referer( 'utcb_nonce', 'nonce' );
+if (!function_exists('urban_taxi_cab_get_post_info')) {
+    function urban_taxi_cab_get_post_info()
+    {
+        check_ajax_referer('utcb_nonce', 'nonce');
 
-        $post_id = isset( $_POST['post_id'] ) ? intval( $_POST['post_id'] ) : 0;
-        if ( ! $post_id ) {
-            wp_send_json_error( 'Invalid post ID' );
+        $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
+        if (!$post_id) {
+            wp_send_json_error('Invalid post ID');
             wp_die();
         }
 
-        $rent_id       = get_post_meta( $post_id, 'link_mptbm_id', true );
-        $settings_json = isset( $_POST['settings'] ) ? wp_unslash( $_POST['settings'] ) : '{}';
-        $settings      = json_decode( $settings_json, true ) ?: [];
+        $rent_id = get_post_meta($post_id, 'link_mptbm_id', true);
+        $settings_json = isset($_POST['settings']) ? wp_unslash($_POST['settings']) : '{}';
+        $settings = json_decode($settings_json, true) ?: [];
 
         ob_start();
-        urban_taxi_cab_booking_slider_render_post_card( $post_id, $rent_id, [], $settings );
+        urban_taxi_cab_booking_slider_render_post_card($post_id, $rent_id, [], $settings);
         $info_html = ob_get_clean();
 
-        wp_send_json_success( [ 'info_html' => $info_html ] );
+        wp_send_json_success(['info_html' => $info_html]);
         wp_die();
     }
-    add_action( 'wp_ajax_utcb_get_post_info', 'urban_taxi_cab_get_post_info' );
-    add_action( 'wp_ajax_nopriv_utcb_get_post_info', 'urban_taxi_cab_get_post_info' );
+    add_action('wp_ajax_utcb_get_post_info', 'urban_taxi_cab_get_post_info');
+    add_action('wp_ajax_nopriv_utcb_get_post_info', 'urban_taxi_cab_get_post_info');
 }
 
-if ( ! function_exists( 'utcb_get_posts_by_category' ) ) {
-    function utcb_get_posts_by_category() {
-        check_ajax_referer( 'utcb_nonce', 'nonce' );
+if (!function_exists('utcb_get_posts_by_category')) {
+    function utcb_get_posts_by_category()
+    {
+        check_ajax_referer('utcb_nonce', 'nonce');
 
-        $category   = isset( $_POST['category'] ) ? sanitize_text_field( $_POST['category'] ) : 'all';
-        $max_titles = isset( $_POST['max_titles'] ) ? intval( $_POST['max_titles'] ) : 10;
+        $category = isset($_POST['category']) ? sanitize_text_field($_POST['category']) : 'all';
+        $max_titles = isset($_POST['max_titles']) ? intval($_POST['max_titles']) : 10;
 
-        $settings_json = isset( $_POST['settings'] ) ? wp_unslash( $_POST['settings'] ) : '{}';
-        $settings      = json_decode( $settings_json, true ) ?: [];
+        $settings_json = isset($_POST['settings']) ? wp_unslash($_POST['settings']) : '{}';
+        $settings = json_decode($settings_json, true) ?: [];
 
-        $meta_query = [ [ 'key' => 'link_mptbm_id', 'compare' => 'EXISTS' ] ];
+        $meta_query = [['key' => 'link_mptbm_id', 'compare' => 'EXISTS']];
 
-        if ( $category !== 'all' ) {
-            $rent_posts = get_posts( [
-                'post_type'      => 'mptbm_rent',
+        if ($category !== 'all') {
+            $rent_posts = get_posts([
+                'post_type' => 'mptbm_rent',
                 'posts_per_page' => -1,
-                'fields'         => 'ids',
-                'tax_query'      => [ [ 'taxonomy' => 'mptbm_category', 'field' => 'term_id', 'terms' => intval( $category ) ] ],
-            ] );
-            if ( empty( $rent_posts ) ) {
-                wp_send_json_success( [ 'html' => '' ] );
+                'fields' => 'ids',
+                'tax_query' => [['taxonomy' => 'mptbm_category', 'field' => 'term_id', 'terms' => intval($category)]],
+            ]);
+            if (empty($rent_posts)) {
+                wp_send_json_success(['html' => '']);
                 return;
             }
-            $meta_query[] = [ 'key' => 'link_mptbm_id', 'value' => $rent_posts, 'compare' => 'IN' ];
+            $meta_query[] = ['key' => 'link_mptbm_id', 'value' => $rent_posts, 'compare' => 'IN'];
         }
 
-        $query = new WP_Query( [
-            'post_type'      => 'product',
+        $query = new WP_Query([
+            'post_type' => 'product',
             'posts_per_page' => $max_titles,
-            'post_status'    => 'publish',
-            'meta_query'     => $meta_query,
-        ] );
+            'post_status' => 'publish',
+            'meta_query' => $meta_query,
+        ]);
 
-        $first_post_id   = 0;
+        $first_post_id = 0;
         $first_info_html = '';
 
         ob_start();
-        if ( $query->have_posts() ) {
-            while ( $query->have_posts() ) {
+        if ($query->have_posts()) {
+            while ($query->have_posts()) {
                 $query->the_post();
                 $post_id = get_the_ID();
-                $data    = utcb_get_post_data( $post_id );
+                $data = utcb_get_post_data($post_id);
 
-                if ( $first_post_id === 0 ) {
+                if ($first_post_id === 0) {
                     $first_post_id = $post_id;
                     ob_start();
-                    urban_taxi_cab_booking_slider_render_post_card( $post_id, $data['rent_id'], [], $settings );
+                    urban_taxi_cab_booking_slider_render_post_card($post_id, $data['rent_id'], [], $settings);
                     $first_info_html = ob_get_clean();
                 }
 
-                $rent_id  = get_post_meta( $post_id, 'link_mptbm_id', true );
-                $rent_post = $rent_id ? get_post( $rent_id ) : null;
+                $rent_id = get_post_meta($post_id, 'link_mptbm_id', true);
+                $rent_post = $rent_id ? get_post($rent_id) : null;
                 $tittle_url = $settings['tittle_url']['url'] ?? '';
-                $final_url  = ! empty( $tittle_url ) ? $tittle_url : ( $rent_post ? get_permalink( $rent_post->ID ) : '#' );
+                $final_url = !empty($tittle_url) ? $tittle_url : ($rent_post ? get_permalink($rent_post->ID) : '#');
                 ?>
-                <div class="utcb-title-item d-flex" data-post-id="<?php echo esc_attr( $post_id ); ?>"
-                    data-image-src="<?php echo esc_url( $data['image_url'] ); ?>"
-                    data-category="<?php echo esc_attr( $data['category_string'] ); ?>">
+                <div class="utcb-title-item d-flex" data-post-id="<?php echo esc_attr($post_id); ?>"
+                    data-image-src="<?php echo esc_url($data['image_url']); ?>"
+                    data-category="<?php echo esc_attr($data['category_string']); ?>">
                     <div class="utcb-title-icon-wrapper">
-                        <?php if ( 'yes' === ( $settings['enable_sidebar_title_icon'] ?? 'yes' ) ) :
-                            $title_icon      = utcb_normalize_elementor_icon_setting( $settings['sidebar_title_icon'] ?? [] );
-                            $title_icon_html = utcb_render_elementor_icon_html( $title_icon, [ 'class' => 'utcb-sidebar-title-icon', 'aria-hidden' => 'true' ] );
-                            if ( ! empty( $title_icon_html ) ) {
+                        <?php if ('yes' === ($settings['enable_sidebar_title_icon'] ?? 'yes')):
+                            $title_icon = utcb_normalize_elementor_icon_setting($settings['sidebar_title_icon'] ?? []);
+                            $title_icon_html = utcb_render_elementor_icon_html($title_icon, ['class' => 'utcb-sidebar-title-icon', 'aria-hidden' => 'true']);
+                            if (!empty($title_icon_html)) {
                                 echo '<span class="utcb-sidebar-title-icon-wrap">' . $title_icon_html . '</span>'; // phpcs:ignore
                             }
                         endif; ?>
                     </div>
                     <div class="utcb-title-contents-wrapper">
                         <h3 class="utcb-title-heading">
-                            <a href="<?php echo esc_url( $final_url ); ?>" target="_blank" rel="noopener">
-                                <?php echo esc_html( get_the_title() ); ?>
+                            <a href="<?php echo esc_url($final_url); ?>" target="_blank" rel="noopener">
+                                <?php echo esc_html(get_the_title()); ?>
                             </a>
                         </h3>
-                        <?php if ( $data['extra_info'] ) : ?>
-                            <div class="utcb-title-desc"><?php echo esc_html( $data['extra_info'] ); ?></div>
+                        <?php if ($data['extra_info']): ?>
+                            <div class="utcb-title-desc"><?php echo esc_html($data['extra_info']); ?></div>
                         <?php endif; ?>
-                        <?php if ( $data['location'] ) :
-                            $loc_icon      = utcb_normalize_elementor_icon_setting( $settings['sidebar_location_icon'] ?? [] );
-                            $loc_icon_html = utcb_render_elementor_icon_html( $loc_icon, [ 'class' => 'utcb-title-location-icon me-1', 'aria-hidden' => 'true' ] );
-                            $location_url  = $settings['location_url']['url'] ?? '';
-                            if ( empty( $location_url ) ) {
-                                $term = get_term_by( 'name', $data['location'], 'locations' );
-                                if ( $term && ! is_wp_error( $term ) ) { $location_url = get_term_link( $term ); }
+                        <?php if ($data['location']):
+                            $loc_icon = utcb_normalize_elementor_icon_setting($settings['sidebar_location_icon'] ?? []);
+                            $loc_icon_html = utcb_render_elementor_icon_html($loc_icon, ['class' => 'utcb-title-location-icon me-1', 'aria-hidden' => 'true']);
+                            $location_url = $settings['location_url']['url'] ?? '';
+                            if (empty($location_url)) {
+                                $term = get_term_by('name', $data['location'], 'locations');
+                                if ($term && !is_wp_error($term)) {
+                                    $location_url = get_term_link($term);
+                                }
                             }
                             ?>
                             <div class="utcb-title-location">
                                 <?php echo $loc_icon_html; // phpcs:ignore ?>
-                                <a href="<?php echo esc_url( $location_url ); ?>" target="_blank" rel="noopener" class="utcb-location-link">
-                                    <?php echo esc_html( $data['location'] ); ?>
+                                <a href="<?php echo esc_url($location_url); ?>" target="_blank" rel="noopener" class="utcb-location-link">
+                                    <?php echo esc_html($data['location']); ?>
                                 </a>
                             </div>
                         <?php endif; ?>
@@ -363,11 +414,11 @@ if ( ! function_exists( 'utcb_get_posts_by_category' ) ) {
         wp_reset_postdata();
         $html = ob_get_clean();
 
-        wp_send_json_success( [ 'html' => $html, 'first_post_id' => $first_post_id, 'first_info_html' => $first_info_html ] );
+        wp_send_json_success(['html' => $html, 'first_post_id' => $first_post_id, 'first_info_html' => $first_info_html]);
         wp_die();
     }
-    add_action( 'wp_ajax_utcb_get_posts_by_category', 'utcb_get_posts_by_category' );
-    add_action( 'wp_ajax_nopriv_utcb_get_posts_by_category', 'utcb_get_posts_by_category' );
+    add_action('wp_ajax_utcb_get_posts_by_category', 'utcb_get_posts_by_category');
+    add_action('wp_ajax_nopriv_utcb_get_posts_by_category', 'utcb_get_posts_by_category');
 }
 
 // ---------------------------------------------------------------------------
@@ -552,7 +603,7 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
                 ],
             ]
         );
-        
+
 
         $this->add_control(
             'category_filter_color',
@@ -974,15 +1025,15 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
             'view_all_location_section',
             [
                 'label' => __('View All Location', 'urban-taxi-cab-booking-slider'),
-                'tab'   => Controls_Manager::TAB_CONTENT,
+                'tab' => Controls_Manager::TAB_CONTENT,
             ]
         );
 
         $this->add_control(
             'show_view_all_location',
             [
-                'label'   => __('Show View All Location', 'urban-taxi-cab-booking-slider'),
-                'type'    => Controls_Manager::SWITCHER,
+                'label' => __('Show View All Location', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::SWITCHER,
                 'default' => 'yes',
             ]
         );
@@ -990,55 +1041,55 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
         $this->add_control(
             'view_all_location_text',
             [
-                'label'     => __('Link Text', 'urban-taxi-cab-booking-slider'),
-                'type'      => Controls_Manager::TEXT,
-                'default'   => __('View All Location', 'urban-taxi-cab-booking-slider'),
-                'condition' => [ 'show_view_all_location' => 'yes' ],
+                'label' => __('Link Text', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::TEXT,
+                'default' => __('View All Location', 'urban-taxi-cab-booking-slider'),
+                'condition' => ['show_view_all_location' => 'yes'],
             ]
         );
 
         $this->add_control(
             'view_all_location_url',
             [
-                'label'       => __('Link URL', 'urban-taxi-cab-booking-slider'),
-                'type'        => Controls_Manager::URL,
-                'dynamic'     => [ 'active' => true ],
+                'label' => __('Link URL', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::URL,
+                'dynamic' => ['active' => true],
                 'placeholder' => __('https://your-link.com', 'urban-taxi-cab-booking-slider'),
-                'default'     => [ 'url' => '', 'is_external' => '' ],
-                'condition'   => [ 'show_view_all_location' => 'yes' ],
+                'default' => ['url' => '', 'is_external' => ''],
+                'condition' => ['show_view_all_location' => 'yes'],
             ]
         );
 
         $this->add_control(
             'view_all_location_icon',
             [
-                'label'     => __('Icon', 'urban-taxi-cab-booking-slider'),
-                'type'      => Controls_Manager::ICONS,
-                'default'   => [
-                    'value'   => 'fas fa-map-marker-alt',
+                'label' => __('Icon', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::ICONS,
+                'default' => [
+                    'value' => 'fas fa-map-marker-alt',
                     'library' => 'fa-solid',
                 ],
-                'condition' => [ 'show_view_all_location' => 'yes' ],
+                'condition' => ['show_view_all_location' => 'yes'],
             ]
         );
 
         $this->add_control(
             'view_all_location_icon_position',
             [
-                'label'   => __('Icon Position', 'urban-taxi-cab-booking-slider'),
-                'type'    => Controls_Manager::SELECT,
+                'label' => __('Icon Position', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::SELECT,
                 'options' => [
                     'before' => __('Before Text', 'urban-taxi-cab-booking-slider'),
-                    'after'  => __('After Text', 'urban-taxi-cab-booking-slider'),
+                    'after' => __('After Text', 'urban-taxi-cab-booking-slider'),
                 ],
-                'default'   => 'before',
-                'condition' => [ 'show_view_all_location' => 'yes' ],
+                'default' => 'before',
+                'condition' => ['show_view_all_location' => 'yes'],
             ]
         );
 
         $this->end_controls_section();
         // ── End View All Location ─────────────────────────────────────────
-    
+
 
         $this->start_controls_section(
             'read_more_style_section',
@@ -1462,7 +1513,7 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
                 'size_units' => ['px', '%'],
                 'range' => [
                     'px' => ['min' => 0, 'max' => 100],
-                    '%'  => ['min' => 0, 'max' => 50],
+                    '%' => ['min' => 0, 'max' => 50],
                 ],
                 'default' => [
                     'unit' => 'px',
@@ -1484,11 +1535,11 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
                 'type' => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em'],
                 'default' => [
-                    'top'      => '0',
-                    'right'    => '8',
-                    'bottom'   => '0',
-                    'left'     => '0',
-                    'unit'     => 'px',
+                    'top' => '0',
+                    'right' => '8',
+                    'bottom' => '0',
+                    'left' => '0',
+                    'unit' => 'px',
                     'isLinked' => false,
                 ],
                 'selectors' => [
@@ -1507,11 +1558,11 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
                 'type' => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em'],
                 'default' => [
-                    'top'      => '0',
-                    'right'    => '0',
-                    'bottom'   => '0',
-                    'left'     => '0',
-                    'unit'     => 'px',
+                    'top' => '0',
+                    'right' => '0',
+                    'bottom' => '0',
+                    'left' => '0',
+                    'unit' => 'px',
                     'isLinked' => false,
                 ],
                 'selectors' => [
@@ -1629,7 +1680,7 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
                 ],
             ]
         );
-        
+
 
         $this->add_control(
             'title_item_active_border_color',
@@ -1642,7 +1693,7 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
                 ],
             ]
         );
-        
+
 
         $this->add_control(
             'title_item_border_radius',
@@ -2248,16 +2299,16 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
             'image_box_style_section',
             [
                 'label' => __('Right Side Image Box', 'urban-taxi-cab-booking-slider'),
-                'tab'   => Controls_Manager::TAB_STYLE,
+                'tab' => Controls_Manager::TAB_STYLE,
             ]
         );
 
         $this->add_control(
             'image_box_bg_color',
             [
-                'label'     => __('Background Color', 'urban-taxi-cab-booking-slider'),
-                'type'      => Controls_Manager::COLOR,
-                'default'   => 'transparent',
+                'label' => __('Background Color', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::COLOR,
+                'default' => 'transparent',
                 'selectors' => [
                     '{{WRAPPER}} .utcb-image-wrapper' => 'background-color: {{VALUE}};',
                 ],
@@ -2267,18 +2318,18 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
         $this->add_responsive_control(
             'image_box_padding',
             [
-                'label'      => __('Padding', 'urban-taxi-cab-booking-slider'),
-                'type'       => Controls_Manager::DIMENSIONS,
+                'label' => __('Padding', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%', 'em'],
-                'default'    => [
-                    'top'      => '0',
-                    'right'    => '0',
-                    'bottom'   => '0',
-                    'left'     => '0',
-                    'unit'     => 'px',
+                'default' => [
+                    'top' => '0',
+                    'right' => '0',
+                    'bottom' => '0',
+                    'left' => '0',
+                    'unit' => 'px',
                     'isLinked' => true,
                 ],
-                'selectors'  => [
+                'selectors' => [
                     '{{WRAPPER}} .utcb-image-wrapper' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
             ]
@@ -2287,18 +2338,18 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
         $this->add_responsive_control(
             'image_box_border_radius',
             [
-                'label'      => __('Border Radius', 'urban-taxi-cab-booking-slider'),
-                'type'       => Controls_Manager::DIMENSIONS,
+                'label' => __('Border Radius', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
-                'default'    => [
-                    'top'      => '0',
-                    'right'    => '0',
-                    'bottom'   => '0',
-                    'left'     => '0',
-                    'unit'     => 'px',
+                'default' => [
+                    'top' => '0',
+                    'right' => '0',
+                    'bottom' => '0',
+                    'left' => '0',
+                    'unit' => 'px',
                     'isLinked' => true,
                 ],
-                'selectors'  => [
+                'selectors' => [
                     '{{WRAPPER}} .utcb-image-wrapper' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}; overflow: hidden;',
                 ],
             ]
@@ -2307,12 +2358,12 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
         $this->add_control(
             'image_box_border_style',
             [
-                'label'   => __('Border Type', 'urban-taxi-cab-booking-slider'),
-                'type'    => Controls_Manager::SELECT,
+                'label' => __('Border Type', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::SELECT,
                 'default' => 'solid',
                 'options' => [
-                    'none'   => __('None', 'urban-taxi-cab-booking-slider'),
-                    'solid'  => __('Solid', 'urban-taxi-cab-booking-slider'),
+                    'none' => __('None', 'urban-taxi-cab-booking-slider'),
+                    'solid' => __('Solid', 'urban-taxi-cab-booking-slider'),
                     'double' => __('Double', 'urban-taxi-cab-booking-slider'),
                     'dotted' => __('Dotted', 'urban-taxi-cab-booking-slider'),
                     'dashed' => __('Dashed', 'urban-taxi-cab-booking-slider'),
@@ -2327,18 +2378,18 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
         $this->add_responsive_control(
             'image_box_border_width',
             [
-                'label'      => __('Border Width', 'urban-taxi-cab-booking-slider'),
-                'type'       => Controls_Manager::DIMENSIONS,
+                'label' => __('Border Width', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px'],
-                'default'    => [
-                    'top'      => '0',
-                    'right'    => '0',
-                    'bottom'   => '0',
-                    'left'     => '0',
-                    'unit'     => 'px',
+                'default' => [
+                    'top' => '0',
+                    'right' => '0',
+                    'bottom' => '0',
+                    'left' => '0',
+                    'unit' => 'px',
                     'isLinked' => true,
                 ],
-                'selectors'  => [
+                'selectors' => [
                     '{{WRAPPER}} .utcb-image-wrapper' => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
             ]
@@ -2347,9 +2398,9 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
         $this->add_control(
             'image_box_border_color',
             [
-                'label'     => __('Border Color', 'urban-taxi-cab-booking-slider'),
-                'type'      => Controls_Manager::COLOR,
-                'default'   => '#e0e0e0',
+                'label' => __('Border Color', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::COLOR,
+                'default' => '#e0e0e0',
                 'selectors' => [
                     '{{WRAPPER}} .utcb-image-wrapper' => 'border-color: {{VALUE}};',
                 ],
@@ -2361,7 +2412,7 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
 
 
 
-        
+
         // ── End Right Side Image Box Style ────────────────────────────────
 
 
@@ -2369,18 +2420,18 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
         $this->start_controls_section(
             'view_all_location_style_section',
             [
-                'label'     => __('View All Location Style', 'urban-taxi-cab-booking-slider'),
-                'tab'       => Controls_Manager::TAB_STYLE,
-                'condition' => [ 'show_view_all_location' => 'yes' ],
+                'label' => __('View All Location Style', 'urban-taxi-cab-booking-slider'),
+                'tab' => Controls_Manager::TAB_STYLE,
+                'condition' => ['show_view_all_location' => 'yes'],
             ]
         );
 
         $this->add_control(
             'view_all_location_text_color',
             [
-                'label'     => __('Text Color', 'urban-taxi-cab-booking-slider'),
-                'type'      => Controls_Manager::COLOR,
-                'default'   => '#ffffff',
+                'label' => __('Text Color', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::COLOR,
+                'default' => '#ffffff',
                 'selectors' => [
                     '{{WRAPPER}} .utcb-view-all-location-row' => 'color: {{VALUE}};',
                     '{{WRAPPER}} .utcb-view-all-location-row a' => 'color: {{VALUE}};',
@@ -2391,9 +2442,9 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
         $this->add_control(
             'view_all_location_hover_color',
             [
-                'label'     => __('Hover Color', 'urban-taxi-cab-booking-slider'),
-                'type'      => Controls_Manager::COLOR,
-                'default'   => '#007cba',
+                'label' => __('Hover Color', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::COLOR,
+                'default' => '#007cba',
                 'selectors' => [
                     '{{WRAPPER}} .utcb-view-all-location-row:hover' => 'color: {{VALUE}};',
                     '{{WRAPPER}} .utcb-view-all-location-row:hover a' => 'color: {{VALUE}};',
@@ -2404,9 +2455,9 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
         $this->add_control(
             'view_all_location_bg_color',
             [
-                'label'     => __('Background Color', 'urban-taxi-cab-booking-slider'),
-                'type'      => Controls_Manager::COLOR,
-                'default'   => 'transparent',
+                'label' => __('Background Color', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::COLOR,
+                'default' => 'transparent',
                 'selectors' => [
                     '{{WRAPPER}} .utcb-view-all-location-row' => 'background-color: {{VALUE}};',
                 ],
@@ -2416,9 +2467,9 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
         $this->add_control(
             'view_all_location_hover_bg_color',
             [
-                'label'     => __('Hover Background Color', 'urban-taxi-cab-booking-slider'),
-                'type'      => Controls_Manager::COLOR,
-                'default'   => 'transparent',
+                'label' => __('Hover Background Color', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::COLOR,
+                'default' => 'transparent',
                 'selectors' => [
                     '{{WRAPPER}} .utcb-view-all-location-row:hover' => 'background-color: {{VALUE}};',
                 ],
@@ -2428,9 +2479,9 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
         $this->add_control(
             'view_all_location_icon_color',
             [
-                'label'     => __('Icon Color', 'urban-taxi-cab-booking-slider'),
-                'type'      => Controls_Manager::COLOR,
-                'default'   => '#ffffff',
+                'label' => __('Icon Color', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::COLOR,
+                'default' => '#ffffff',
                 'selectors' => [
                     '{{WRAPPER}} .utcb-view-all-location-icon' => 'color: {{VALUE}}; fill: {{VALUE}};',
                     '{{WRAPPER}} .utcb-view-all-location-icon svg path' => 'fill: {{VALUE}};',
@@ -2441,12 +2492,12 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
         $this->add_control(
             'view_all_location_icon_size',
             [
-                'label'      => __('Icon Size', 'urban-taxi-cab-booking-slider'),
-                'type'       => Controls_Manager::SLIDER,
+                'label' => __('Icon Size', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::SLIDER,
                 'size_units' => ['px'],
-                'range'      => [ 'px' => [ 'min' => 10, 'max' => 30 ] ],
-                'default'    => [ 'unit' => 'px', 'size' => 14 ],
-                'selectors'  => [
+                'range' => ['px' => ['min' => 10, 'max' => 30]],
+                'default' => ['unit' => 'px', 'size' => 14],
+                'selectors' => [
                     '{{WRAPPER}} .utcb-view-all-location-icon' => 'font-size: {{SIZE}}{{UNIT}}; width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
                 ],
             ]
@@ -2455,8 +2506,8 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
         $this->add_group_control(
             \Elementor\Group_Control_Typography::get_type(),
             [
-                'name'     => 'view_all_location_typography',
-                'label'    => __('Typography', 'urban-taxi-cab-booking-slider'),
+                'name' => 'view_all_location_typography',
+                'label' => __('Typography', 'urban-taxi-cab-booking-slider'),
                 'selector' => '{{WRAPPER}} .utcb-view-all-location-row a',
             ]
         );
@@ -2464,14 +2515,18 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
         $this->add_responsive_control(
             'view_all_location_padding',
             [
-                'label'      => __('Padding', 'urban-taxi-cab-booking-slider'),
-                'type'       => Controls_Manager::DIMENSIONS,
+                'label' => __('Padding', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', 'em', '%'],
-                'default'    => [
-                    'top' => '12', 'right' => '20', 'bottom' => '12', 'left' => '20',
-                    'unit' => 'px', 'isLinked' => false,
+                'default' => [
+                    'top' => '12',
+                    'right' => '20',
+                    'bottom' => '12',
+                    'left' => '20',
+                    'unit' => 'px',
+                    'isLinked' => false,
                 ],
-                'selectors'  => [
+                'selectors' => [
                     '{{WRAPPER}} .utcb-view-all-location-row' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
             ]
@@ -2480,9 +2535,9 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
         $this->add_control(
             'view_all_location_border_color',
             [
-                'label'     => __('Border Color', 'urban-taxi-cab-booking-slider'),
-                'type'      => Controls_Manager::COLOR,
-                'default'   => '#5E5E5E',
+                'label' => __('Border Color', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::COLOR,
+                'default' => '#5E5E5E',
                 'selectors' => [
                     '{{WRAPPER}} .utcb-view-all-location-row' => 'border-color: {{VALUE}};',
                 ],
@@ -2492,12 +2547,12 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
         $this->add_control(
             'view_all_location_border_width',
             [
-                'label'      => __('Border Width', 'urban-taxi-cab-booking-slider'),
-                'type'       => Controls_Manager::SLIDER,
+                'label' => __('Border Width', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::SLIDER,
                 'size_units' => ['px'],
-                'range'      => [ 'px' => [ 'min' => 0, 'max' => 5 ] ],
-                'default'    => [ 'unit' => 'px', 'size' => 1 ],
-                'selectors'  => [
+                'range' => ['px' => ['min' => 0, 'max' => 5]],
+                'default' => ['unit' => 'px', 'size' => 1],
+                'selectors' => [
                     '{{WRAPPER}} .utcb-view-all-location-row' => 'border-width: {{SIZE}}{{UNIT}}; border-style: solid;',
                 ],
             ]
@@ -2506,12 +2561,12 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
         $this->add_control(
             'view_all_location_border_radius',
             [
-                'label'      => __('Border Radius', 'urban-taxi-cab-booking-slider'),
-                'type'       => Controls_Manager::SLIDER,
+                'label' => __('Border Radius', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::SLIDER,
                 'size_units' => ['px', '%'],
-                'range'      => [ 'px' => [ 'min' => 0, 'max' => 50 ] ],
-                'default'    => [ 'unit' => 'px', 'size' => 0 ],
-                'selectors'  => [
+                'range' => ['px' => ['min' => 0, 'max' => 50]],
+                'default' => ['unit' => 'px', 'size' => 0],
+                'selectors' => [
                     '{{WRAPPER}} .utcb-view-all-location-row' => 'border-radius: {{SIZE}}{{UNIT}};',
                 ],
             ]
@@ -2520,12 +2575,12 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
         $this->add_control(
             'view_all_location_gap',
             [
-                'label'      => __('Gap Between Icon & Text', 'urban-taxi-cab-booking-slider'),
-                'type'       => Controls_Manager::SLIDER,
+                'label' => __('Gap Between Icon & Text', 'urban-taxi-cab-booking-slider'),
+                'type' => Controls_Manager::SLIDER,
                 'size_units' => ['px'],
-                'range'      => [ 'px' => [ 'min' => 0, 'max' => 20 ] ],
-                'default'    => [ 'unit' => 'px', 'size' => 8 ],
-                'selectors'  => [
+                'range' => ['px' => ['min' => 0, 'max' => 20]],
+                'default' => ['unit' => 'px', 'size' => 8],
+                'selectors' => [
                     '{{WRAPPER}} .utcb-view-all-location-inner' => 'gap: {{SIZE}}{{UNIT}};',
                 ],
             ]
@@ -2670,7 +2725,7 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
 
                                     <?php
                                     $location_url = $settings['location_url']['url'] ?? '';
-                                     if (empty($location_url)) {
+                                    if (empty($location_url)) {
                                         $term = get_term_by('name', $data['location'], 'locations');
 
                                         if ($term && !is_wp_error($term)) {
@@ -2690,10 +2745,10 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
                     <?php
                     $show_val = isset($settings['show_view_all_location']) && $settings['show_view_all_location'] !== '' ? $settings['show_view_all_location'] : 'yes';
                     if ('yes' === $show_val):
-                        $val_text     = !empty($settings['view_all_location_text']) ? $settings['view_all_location_text'] : __('View All Location', 'urban-taxi-cab-booking-slider');
-                        $val_url      = utcb_get_shop_url(!empty($settings['view_all_location_url']['url']) ? $settings['view_all_location_url']['url'] : '');
+                        $val_text = !empty($settings['view_all_location_text']) ? $settings['view_all_location_text'] : __('View All Location', 'urban-taxi-cab-booking-slider');
+                        $val_url = utcb_get_shop_url(!empty($settings['view_all_location_url']['url']) ? $settings['view_all_location_url']['url'] : '');
                         $val_external = !empty($settings['view_all_location_url']['is_external']);
-                        $val_icon     = utcb_normalize_elementor_icon_setting($settings['view_all_location_icon'] ?? []);
+                        $val_icon = utcb_normalize_elementor_icon_setting($settings['view_all_location_icon'] ?? []);
                         $val_icon_html = utcb_render_elementor_icon_html(
                             $val_icon,
                             ['class' => 'utcb-view-all-location-icon', 'aria-hidden' => 'true']
@@ -2701,8 +2756,7 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
                         $val_position = !empty($settings['view_all_location_icon_position']) ? $settings['view_all_location_icon_position'] : 'before';
                         ?>
                         <div class="utcb-view-all-location-row">
-                            <a href="<?php echo esc_url($val_url); ?>" class="utcb-view-all-location-inner"
-                                <?php echo $val_external ? 'target="_blank" rel="noopener"' : ''; ?>>
+                            <a href="<?php echo esc_url($val_url); ?>" class="utcb-view-all-location-inner" <?php echo $val_external ? 'target="_blank" rel="noopener"' : ''; ?>>
                                 <?php if ($val_position === 'before' && $val_icon_html): ?>
                                     <?php echo $val_icon_html; // phpcs:ignore ?>
                                 <?php endif; ?>
@@ -2724,7 +2778,7 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
                 $first_image = '';
                 if ($first_rent_id)
                     // $first_image = get_post_meta($first_rent_id, 'feature_image', true);
-                        $first_image = get_the_post_thumbnail_url($rent_id, 'large');
+                    $first_image = get_the_post_thumbnail_url($rent_id, 'large');
                 if (!$first_image && has_post_thumbnail())
                     $first_image = get_the_post_thumbnail_url($first_post_id, 'large');
                 ?>
@@ -2748,37 +2802,49 @@ class Urban_Taxi_Cab_Booking_Slider_Widget extends Widget_Base
             <style>
                 @media (min-width: 1201px) {
                     #<?php echo esc_attr($wrapper_id); ?> .utcb-active-image {
-                        height: <?php echo esc_attr($settings['height_desktop']['size'] ?? 500); ?>px !important;
+                        height:
+                            <?php echo esc_attr($settings['height_desktop']['size'] ?? 500); ?>
+                            px !important;
                     }
                 }
 
                 @media (min-width: 1025px) and (max-width: 1200px) {
                     #<?php echo esc_attr($wrapper_id); ?> .utcb-active-image {
-                        height: <?php echo esc_attr($settings['height_laptop']['size'] ?? 450); ?>px !important;
+                        height:
+                            <?php echo esc_attr($settings['height_laptop']['size'] ?? 450); ?>
+                            px !important;
                     }
                 }
 
                 @media (min-width: 992px) and (max-width: 1024px) and (orientation: portrait) {
                     #<?php echo esc_attr($wrapper_id); ?> .utcb-active-image {
-                        height: <?php echo esc_attr($settings['height_tablet_portrait']['size'] ?? 400); ?>px !important;
+                        height:
+                            <?php echo esc_attr($settings['height_tablet_portrait']['size'] ?? 400); ?>
+                            px !important;
                     }
                 }
 
                 @media (min-width: 768px) and (max-width: 991px) {
                     #<?php echo esc_attr($wrapper_id); ?> .utcb-active-image {
-                        height: <?php echo esc_attr($settings['height_tablet']['size'] ?? 350); ?>px !important;
+                        height:
+                            <?php echo esc_attr($settings['height_tablet']['size'] ?? 350); ?>
+                            px !important;
                     }
                 }
 
                 @media (min-width: 576px) and (max-width: 767px) and (orientation: portrait) {
                     #<?php echo esc_attr($wrapper_id); ?> .utcb-active-image {
-                        height: <?php echo esc_attr($settings['height_mobile_portrait']['size'] ?? 300); ?>px !important;
+                        height:
+                            <?php echo esc_attr($settings['height_mobile_portrait']['size'] ?? 300); ?>
+                            px !important;
                     }
                 }
 
                 @media (max-width: 575px) {
                     #<?php echo esc_attr($wrapper_id); ?> .utcb-active-image {
-                        height: <?php echo esc_attr($settings['height_mobile']['size'] ?? 250); ?>px !important;
+                        height:
+                            <?php echo esc_attr($settings['height_mobile']['size'] ?? 250); ?>
+                            px !important;
                     }
                 }
             </style>

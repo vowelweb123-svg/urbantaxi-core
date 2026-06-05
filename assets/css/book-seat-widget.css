@@ -380,6 +380,7 @@ div.mpStyle h4{
 .theme-urbantaxi .mpStyle .dLayout, .theme-urbantaxi .mpStyle [class*="_dLayout"]{
 	background-color: transparent;
 	border: none;
+    color: #fff;
 }
 .theme-urbantaxi .mpStyle .inputInline .mpForm:last-child{
 	position: relative;
