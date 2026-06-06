@@ -143,7 +143,6 @@ function urbantaxi_service_cards_load_more_posts() {
 
                         ?>
                     </div>
-
                 </div>
                 <?php
                 $i++;

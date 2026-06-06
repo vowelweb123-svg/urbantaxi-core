@@ -102,8 +102,7 @@ function utcfw_filter_posts()
                     <?php
                     $rent_id = get_the_ID();
 
-                     $initial_price = get_post_meta($rent_id, 'mptbm_initial_price', true);
-                     $km_price = get_post_meta($rent_id, 'mptbm_km_price', true);
+                    $km_price = get_post_meta($rent_id, 'mptbm_km_price', true);
 
                     $seating_capacity = '';
                     $additional_charge_km = '';
@@ -153,13 +152,13 @@ function utcfw_filter_posts()
                             </div>
                         <?php endif; ?>
 
-                        <?php if ($initial_price): ?>
+                        <?php if ($additional_passenger): ?>
                             <div style="align-self:center; justify-content: space-between;">
                                 <span class="d-flex">
                                     <?php echo $content_meta_icon_prefix; ?>
-                                    <strong>Base Fare:</strong>
+                                    <strong>Passenger:</strong>
                                 </span>
-                                <?php echo $currency_symbol . esc_html($initial_price); ?>
+                                <?php echo $currency_symbol . esc_html($additional_passenger); ?>
                             </div>
                         <?php endif; ?>
 

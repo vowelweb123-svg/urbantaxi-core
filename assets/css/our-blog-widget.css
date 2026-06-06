@@ -30,13 +30,11 @@
     width: 100%;
     border-radius: 6px;
 }
-.urbantaxi-blog-categories a {
+.urbantaxi-blog-categories {
+    margin-top: 12px;
     font-size: 14px;
     line-height: 1.4;
     color: #6b7280;
-}
-.urbantaxi-blog-categories {
-    margin-top: 12px;
     transition: color .3s ease;
     width: fit-content;
 }

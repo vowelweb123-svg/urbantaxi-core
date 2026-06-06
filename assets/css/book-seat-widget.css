@@ -37,7 +37,7 @@
     max-width: unset;
     box-shadow: unset;
     border-radius: 6px;
-    /* background: var(--urbantaxi-tertiary-theme-color); */
+    background: #0B0B0B;
     border: 1px solid #FDC702;
 }
 .elementor-20 .elementor-element.elementor-element-e53551b .urbantaxi-modal-content {
@@ -377,10 +377,12 @@ div.mpStyle h4{
     width: 48px;
     object-fit: contain;
 }
+.theme-urbantaxi .mp_sticky_depend_area .mptbm-filter-feature{
+	display: none !important;
+}
 .theme-urbantaxi .mpStyle .dLayout, .theme-urbantaxi .mpStyle [class*="_dLayout"]{
 	background-color: transparent;
 	border: none;
-    color: #fff;
 }
 .theme-urbantaxi .mpStyle .inputInline .mpForm:last-child{
 	position: relative;

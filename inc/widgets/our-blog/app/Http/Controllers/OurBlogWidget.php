@@ -1010,7 +1010,7 @@ class OurBlogWidget extends Widget_Base
                 'label' => __('Text Color', 'urbantaxi-our-blog-widget'),
                 'type'  => Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .urbantaxi-blog-categories a' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .urbantaxi-blog-categories' => 'color: {{VALUE}};',
                 ],
             ]
         );
@@ -1032,8 +1032,8 @@ class OurBlogWidget extends Widget_Base
                 'label' => __('Hover Text Color', 'urbantaxi-our-blog-widget'),
                 'type'  => Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .urbantaxi-blog-card:hover .urbantaxi-blog-categories a' => 'color: {{VALUE}};',
-                    '{{WRAPPER}} .urbantaxi-blog-card:focus-within .urbantaxi-blog-categories a' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .urbantaxi-blog-card:hover .urbantaxi-blog-categories' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .urbantaxi-blog-card:focus-within .urbantaxi-blog-categories' => 'color: {{VALUE}};',
                 ],
             ]
         );
@@ -1055,7 +1055,7 @@ class OurBlogWidget extends Widget_Base
             \Elementor\Group_Control_Typography::get_type(),
             [
                 'name' => 'category_typography',
-                'selector' => '{{WRAPPER}} .urbantaxi-blog-categories a',
+                'selector' => '{{WRAPPER}} .urbantaxi-blog-categories',
             ]
         );
 
@@ -1072,7 +1072,7 @@ class OurBlogWidget extends Widget_Base
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .urbantaxi-blog-categories a' => 'font-size: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .urbantaxi-blog-categories' => 'font-size: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
@@ -1090,7 +1090,7 @@ class OurBlogWidget extends Widget_Base
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .urbantaxi-blog-categories a' => 'line-height: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .urbantaxi-blog-categories' => 'line-height: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );

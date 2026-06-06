@@ -47,14 +47,8 @@ if (!defined('ABSPATH')) {
                             <?php
                             $urbantaxi_our_blog_widget_random_index = array_rand($urbantaxi_our_blog_widget_categories);
                             $urbantaxi_our_blog_widget_random_category = $urbantaxi_our_blog_widget_categories[$urbantaxi_our_blog_widget_random_index];
-
-                            $urbantaxi_our_blog_widget_category_link = get_category_link(
-                                $urbantaxi_our_blog_widget_random_category->term_id
-                            );
+                            echo esc_html($urbantaxi_our_blog_widget_random_category->name);
                             ?>
-                            <a href="<?php echo esc_url($urbantaxi_our_blog_widget_category_link); ?>">
-                                <?php echo esc_html($urbantaxi_our_blog_widget_random_category->name); ?>
-                            </a>
                         </div>
                     <?php endif; ?>
 

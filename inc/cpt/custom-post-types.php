@@ -45,92 +45,75 @@ function cpcp_create_post_services() {
     ));
 }
 
-// -------------------------------------------------------------------------
-// Locations taxonomy — meta box, query, and save (secure, named functions)
-// -------------------------------------------------------------------------
+// location
+add_action('init', function () {
 
-add_action( 'init', 'urbantaxi_locations_meta_box_setup', 99 );
-function urbantaxi_locations_meta_box_setup() {
-    if ( ! taxonomy_exists( 'locations' ) ) {
-        register_taxonomy( 'locations', [ 'mptbm_rent' ], [
-            'label'        => __( 'Locations', 'urbantaxi' ),
-            'public'       => true,
-            'show_ui'      => true,
-            'show_in_rest' => true,
-            'hierarchical' => true,
-            'rewrite'      => [ 'slug' => 'locations' ],
-        ] );
-    }
-    global $wp_taxonomies;
-    if ( isset( $wp_taxonomies['locations'] ) ) {
-        $wp_taxonomies['locations']->meta_box_cb = 'urbantaxi_locations_meta_box_cb';
-    }
-}
+	if (!taxonomy_exists('locations')) {
 
-function urbantaxi_locations_meta_box_cb( $post, $box ) {
-    $taxonomy = $box['args']['taxonomy'];
-    $terms    = get_terms( [
-        'taxonomy'   => $taxonomy,
-        'hide_empty' => false,
-    ] );
-    $selected = wp_get_post_terms( $post->ID, $taxonomy, [ 'fields' => 'ids' ] );
-    $selected = ! empty( $selected ) ? $selected[0] : '';
+		register_taxonomy('locations', ['mptbm_rent'], [
+			'label' => 'Locations',
+			'public' => true,
+			'show_ui' => true,
+			'show_in_rest' => true,
+			'hierarchical' => true,
+			'rewrite' => ['slug' => 'locations'],
+		]);
 
-    echo '<select name="custom_location" style="width:100%;">';
-    echo '<option value="">' . esc_html__( 'Select Location', 'urbantaxi' ) . '</option>';
-    foreach ( $terms as $term ) {
-        printf(
-            '<option value="%d" %s>%s</option>',
-            $term->term_id,
-            selected( $selected, $term->term_id, false ),
-            esc_html( $term->name )
-        );
-    }
-    echo '</select>';
-    wp_nonce_field( 'urbantaxi_custom_location_action', 'urbantaxi_custom_location_nonce' );
-}
+	}
 
-add_action( 'pre_get_posts', 'urbantaxi_locations_pre_get_posts', 20 );
-function urbantaxi_locations_pre_get_posts( $query ) {
-    if ( is_admin() || ! $query->is_main_query() ) {
-        return;
-    }
-    if ( $query->is_tax( 'locations' ) ) {
-        $query->set( 'post_type', [ 'mptbm_rent' ] );
-        $posts_per_page = absint( get_option( 'posts_per_page', 10 ) );
-        $query->set( 'posts_per_page', $posts_per_page > 0 ? $posts_per_page : 10 );
-    }
-}
+	global $wp_taxonomies;
 
-add_action( 'save_post', 'urbantaxi_save_custom_location', 20 );
-function urbantaxi_save_custom_location( $post_id ) {
-    if ( get_post_type( $post_id ) !== 'mptbm_rent' ) {
-        return;
-    }
-    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-        return;
-    }
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-    if (
-        ! isset( $_POST['urbantaxi_custom_location_nonce'] ) ||
-        ! wp_verify_nonce(
-            sanitize_text_field( wp_unslash( $_POST['urbantaxi_custom_location_nonce'] ) ),
-            'urbantaxi_custom_location_action'
-        )
-    ) {
-        return;
-    }
-    if ( isset( $_POST['custom_location'] ) ) {
-        $term_id = intval( wp_unslash( $_POST['custom_location'] ) );
-        if ( $term_id > 0 ) {
-            wp_set_object_terms( $post_id, [ $term_id ], 'locations', false );
-        } else {
-            wp_set_object_terms( $post_id, [], 'locations', false );
-        }
-    }
-}
+	if (isset($wp_taxonomies['locations'])) {
+
+		$wp_taxonomies['locations']->meta_box_cb = function ($post, $box) {
+
+			        $taxonomy = $box['args']['taxonomy'];
+
+			        $terms = get_terms([
+			        	'taxonomy' => $taxonomy,
+			        	'hide_empty' => false,
+			        ]);
+
+			        $selected = wp_get_post_terms($post->ID, $taxonomy, ['fields' => 'ids']);
+			        $selected = !empty($selected) ? $selected[0] : '';
+
+			        echo '<select name="custom_location" style="width:100%;">';
+			        echo '<option value="">Select Location</option>';
+
+			        foreach ($terms as $term) {
+				        printf(
+				        	'<option value="%d" %s>%s</option>',
+				        	$term->term_id,
+				        	selected($selected, $term->term_id, false),
+				        	esc_html($term->name)
+				        );
+			        }
+
+			        echo '</select>';
+		        }
+		        	;
+
+	        }
+
+        }, 99);
+
+add_action('save_post', function ($post_id) {
+
+	if (get_post_type($post_id) !== 'mptbm_rent')
+		return;
+	if (isset($_POST['custom_location'])) {
+
+		$term_id = intval($_POST['custom_location']);
+
+		if ($term_id > 0) {
+			wp_set_object_terms($post_id, [$term_id], 'locations', false);
+		}
+		else {
+			wp_set_object_terms($post_id, [], 'locations', false);
+		}
+	}
+
+}, 20);
 
 
 // ---------------- service---------------
@@ -456,248 +439,3 @@ function custom_post_posttype_bn_meta_save( $post_id ) {
 }
 
 add_action( 'save_post', 'custom_post_posttype_bn_meta_save' );
-
-// -------------------------------------------------------------------------
-// Location taxonomy image fields (add/edit/save + media uploader script)
-// -------------------------------------------------------------------------
-
-add_action( 'locations_add_form_fields', 'urbantaxi_add_location_image_field' );
-function urbantaxi_add_location_image_field() { ?>
-	<div class="form-field term-group">
-		<label for="location-image"><?php esc_html_e( 'Image', 'urbantaxi' ); ?></label>
-		<?php wp_nonce_field( 'urbantaxi_location_image_action', 'urbantaxi_location_image_nonce' ); ?>
-		<input type="hidden" id="location-image" name="location-image" value="">
-		<div id="image-preview"></div>
-		<button type="button" class="button button-secondary" id="upload-image-btn">
-			<?php esc_html_e( 'Upload Image', 'urbantaxi' ); ?>
-		</button>
-	</div>
-	<?php
-}
-
-add_action( 'locations_edit_form_fields', 'urbantaxi_edit_location_image_field' );
-function urbantaxi_edit_location_image_field( $term ) {
-	$image_id = get_term_meta( $term->term_id, 'location-image', true );
-	?>
-	<tr class="form-field term-group-wrap">
-		<th scope="row"><label for="location-image"><?php esc_html_e( 'Image', 'urbantaxi' ); ?></label></th>
-		<td>
-			<?php wp_nonce_field( 'urbantaxi_location_image_action', 'urbantaxi_location_image_nonce' ); ?>
-			<input type="hidden" id="location-image" name="location-image" value="<?php echo esc_attr( $image_id ); ?>">
-			<div id="image-preview">
-				<?php if ( $image_id ) {
-					echo wp_get_attachment_image( $image_id, 'thumbnail' );
-				} ?>
-			</div>
-			<button type="button" class="button button-secondary" id="upload-image-btn">
-				<?php esc_html_e( 'Upload Image', 'urbantaxi' ); ?>
-			</button>
-		</td>
-	</tr>
-	<?php
-}
-
-add_action( 'created_locations', 'urbantaxi_save_location_image' );
-add_action( 'edited_locations', 'urbantaxi_save_location_image' );
-function urbantaxi_save_location_image( $term_id ) {
-	if (
-		! isset( $_POST['urbantaxi_location_image_nonce'] ) ||
-		! wp_verify_nonce(
-			sanitize_text_field( wp_unslash( $_POST['urbantaxi_location_image_nonce'] ) ),
-			'urbantaxi_location_image_action'
-		)
-	) {
-		return;
-	}
-	if ( isset( $_POST['location-image'] ) ) {
-		update_term_meta(
-			$term_id,
-			'location-image',
-			sanitize_text_field( wp_unslash( $_POST['location-image'] ) )
-		);
-	}
-}
-
-add_action( 'admin_footer', 'urbantaxi_location_admin_scripts' );
-function urbantaxi_location_admin_scripts( $hook ) {
-	wp_enqueue_media();
-	?>
-	<script>
-	jQuery(document).ready(function($){
-		var mediaUploader;
-		$('#upload-image-btn').click(function(e) {
-			e.preventDefault();
-			if (mediaUploader) {
-				mediaUploader.open();
-				return;
-			}
-			mediaUploader = wp.media({
-				title: 'Select Image',
-				button: { text: 'Use this image' },
-				multiple: false
-			});
-			mediaUploader.on('select', function() {
-				var attachment = mediaUploader.state().get('selection').first().toJSON();
-				$('#location-image').val(attachment.id);
-				$('#image-preview').html('<img src="'+attachment.url+'" style="max-width:100px;">');
-			});
-			mediaUploader.open();
-		});
-	});
-	</script>
-	<?php
-}
-
-// -------------------------------------------------------------------------
-// Single transportation URL routing
-// -------------------------------------------------------------------------
-
-add_action( 'parse_request', 'urbantaxi_parse_request_transportation', 0 );
-function urbantaxi_parse_request_transportation( $wp ) {
-	if ( ! empty( $wp->request ) && strpos( $wp->request, 'transportation/' ) === 0 ) {
-		$slug                        = basename( $wp->request );
-		$wp->query_vars['post_type'] = 'transportation';
-		$wp->query_vars['name']      = $slug;
-		status_header( 200 );
-	}
-}
-
-add_action( 'pre_get_posts', 'urbantaxi_pre_get_posts_transportation', 0 );
-function urbantaxi_pre_get_posts_transportation( $query ) {
-	if ( ! is_admin() && $query->is_main_query() ) {
-		if ( $query->get( 'post_type' ) === 'transportation' ) {
-			$query->is_404 = false;
-		}
-	}
-}
-
-add_filter( 'template_include', 'urbantaxi_template_include_transportation', 999 );
-function urbantaxi_template_include_transportation( $template ) {
-	if ( get_query_var( 'post_type' ) === 'transportation' ) {
-		return get_stylesheet_directory() . '/single-transportation.php';
-	}
-	return $template;
-}
-
-// -------------------------------------------------------------------------
-// Booking form scroll behaviour (.mptbm_transport_select)
-// -------------------------------------------------------------------------
-
-add_action( 'wp_footer', 'urbantaxi_custom_transport_select_script' );
-function urbantaxi_custom_transport_select_script() { ?>
-	<script type="text/javascript">
-	jQuery(document).ready(function($) {
-		function findScrollableParent(element) {
-			var $element = $(element);
-			var $parent = $element.parent();
-			while ($parent.length) {
-				var overflow = $parent.css('overflow-y');
-				if (overflow === 'auto' || overflow === 'scroll') {
-					if ($parent[0].scrollHeight > $parent[0].clientHeight) {
-						return $parent;
-					}
-				}
-				$parent = $parent.parent();
-			}
-			var $modalContent = $element.closest('.urbantaxi-modal-content');
-			if ($modalContent.length && $modalContent[0].scrollHeight > $modalContent[0].clientHeight) {
-				return $modalContent;
-			}
-			var $mainSection = $element.closest('.mainSection');
-			if ($mainSection.length && $mainSection[0].scrollHeight > $mainSection[0].clientHeight) {
-				return $mainSection;
-			}
-			var $mpStickyArea = $element.closest('.mp_sticky_depend_area');
-			if ($mpStickyArea.length && $mpStickyArea[0].scrollHeight > $mpStickyArea[0].clientHeight) {
-				return $mpStickyArea;
-			}
-			return null;
-		}
-		$(document).on('click', '.mptbm_transport_select', function(e) {
-			e.preventDefault();
-			e.stopPropagation();
-			var $button = $(this);
-			var $scrollableParent = findScrollableParent($button);
-			if ($scrollableParent) {
-				$scrollableParent.animate({ scrollTop: $scrollableParent[0].scrollHeight }, 500);
-			} else {
-				var $modalContent = $button.closest('.urbantaxi-modal-content');
-				if ($modalContent.length) {
-					$modalContent.animate({ scrollTop: $modalContent[0].scrollHeight }, 500);
-				}
-			}
-			return false;
-		});
-	});
-	</script>
-	<?php
-}
-
-// -------------------------------------------------------------------------
-// Elementor support for driver CPT + transport feature label helper
-// -------------------------------------------------------------------------
-
-add_action( 'init', 'urbantaxi_add_elementor_support_for_driver' );
-function urbantaxi_add_elementor_support_for_driver() {
-	add_post_type_support( 'driver', 'elementor' );
-}
-
-function urbantaxi_modify_transport_features( $features ) {
-	if ( ! empty( $features ) && is_array( $features ) ) {
-		foreach ( $features as $key => $feature ) {
-			$label = $feature['label'] ?? '';
-			$text  = $feature['text'] ?? '';
-			$features[ $key ]['text'] = $label . ': ' . $text;
-		}
-	}
-	return $features;
-}
-
-// -------------------------------------------------------------------------
-// Sync product thumbnails from linked mptbm_rent records (admin only)
-// -------------------------------------------------------------------------
-
-add_action( 'init', 'urbantaxi_sync_product_thumbnails' );
-function urbantaxi_sync_product_thumbnails() {
-	if ( ! is_admin() ) {
-		return;
-	}
-	$products = get_posts( [
-		'post_type'      => 'product',
-		'posts_per_page' => -1,
-		'meta_key'       => 'link_mptbm_id',
-		'post_status'    => 'any',
-	] );
-	if ( empty( $products ) ) {
-		return;
-	}
-	$grouped = [];
-	foreach ( $products as $product ) {
-		$rent_id = get_post_meta( $product->ID, 'link_mptbm_id', true );
-		if ( ! $rent_id ) {
-			continue;
-		}
-		$thumbnail_id         = get_post_thumbnail_id( $product->ID );
-		$grouped[ $rent_id ][] = [
-			'product_id'   => $product->ID,
-			'thumbnail_id' => $thumbnail_id,
-		];
-	}
-	foreach ( $grouped as $rent_id => $items ) {
-		$main_thumbnail_id = 0;
-		foreach ( $items as $item ) {
-			if ( ! empty( $item['thumbnail_id'] ) ) {
-				$main_thumbnail_id = $item['thumbnail_id'];
-				break;
-			}
-		}
-		if ( ! $main_thumbnail_id ) {
-			continue;
-		}
-		foreach ( $items as $item ) {
-			if ( empty( $item['thumbnail_id'] ) ) {
-				update_post_meta( $item['product_id'], '_thumbnail_id', $main_thumbnail_id );
-			}
-		}
-	}
-}
