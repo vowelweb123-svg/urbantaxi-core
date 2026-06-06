@@ -375,15 +375,18 @@ function urbantaxi_core_register_widgets( $widgets_manager ) {
             error_log( "UrbanTaxi Core: Error registering widget {$class_name} - " . $e->getMessage() );
         }
     }
+}
 
-    // Initialize smart-animations integration (singleton, not an Elementor widget)
+add_action( 'elementor/widgets/register', 'urbantaxi_core_register_widgets', 99 );
+
+// Smart animations must hook into elementor/element/* which fires during elementor/init,
+// before elementor/widgets/register — so load it early on elementor/init.
+add_action( 'elementor/init', function() {
     $smart_animations_file = URBANTAXI_CORE_PLUGIN_DIR . 'inc/widgets/smart-animations/elementor-integration.php';
     if ( file_exists( $smart_animations_file ) ) {
         require_once $smart_animations_file;
     }
-}
-
-add_action( 'elementor/widgets/register', 'urbantaxi_core_register_widgets', 99 );
+} );
 
 function urbantaxi_core_register_widget_categories( $elements_manager ) {
     $elements_manager->add_category(
